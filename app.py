@@ -16,6 +16,7 @@ def action_page():
     uploaded_file = request.files['filename']
 
     # Save the uploaded file to a local folder
+    # Later we need to save the file into S3 buckets
     local_folder = 'Sample-Images/'
     if not os.path.exists(local_folder):
         os.makedirs(local_folder)
