@@ -1,0 +1,63 @@
+/* ocr_styles.css */
+
+/* Set font and line height for entire body */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4; /* Set background color */
+}
+
+h2 {
+    /* Set h2 color to dark grey */
+    color: #333;
+    /* Add a 15px bottom margin for spacing */
+    margin-bottom: 15px;
+}
+
+.ocr-upload {
+    /* background color, white */
+    background-color: #fff;
+    /* padding around the content */
+    padding: 20px;
+    /* maximum width of the upload container */
+    max-width: 500px;
+    /* automatic margins on top and bottom */
+    margin: 20px auto;
+    /* light box shadow to create depth */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ocr-upload form {
+    /* flex container settings */
+    display: flex;
+    flex-direction: column;
+}
+
+.ocr-upload input[type="file"] {
+    /* Hide file input field */
+    display: none;
+}
+
+.ocr-upload label {
+    /* style label with padding and margin */
+    padding: 10px 20px;
+    margin-bottom: 10px;
+
+    /* set label background color */
+    background-color: #eee;
+
+    /* set label cursor style to pointer */
+    cursor: pointer;
+}
+
+.ocr-upload input[type="submit"] {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.ocr-upload input[type="submit"]:hover {
+    background-color: #555;
+}
