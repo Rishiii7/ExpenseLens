@@ -12,6 +12,13 @@ def home():
 
 @app.route('/upload_file', methods=['POST'])
 def action_page():
+
+    # Check if the post request has the file part
+    if 'filename' not in request.files:
+        print("File not found")
+        # Handle the case where no file is selected
+        return render_template('test.html', error="No file selected")
+
     # Get the uploaded file
     uploaded_file = request.files['filename']
 
@@ -24,8 +31,6 @@ def action_page():
     file_name = uploaded_file.filename
     file_path = os.path.join(local_folder, file_name)
     uploaded_file.save(file_path)
-
-    print("Successfully uploaded the file")
     
     # Return a success message
     return render_template('ocr_success.html')
