@@ -1,63 +1,132 @@
-/* ocr_styles.css */
-
-/* Set font and line height for entire body */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    background-color: #f4f4f4; /* Set background color */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #121212;
+  color: #ffffff;
 }
-
-h2 {
-    /* Set h2 color to dark grey */
-    color: #333;
-    /* Add a 15px bottom margin for spacing */
-    margin-bottom: 15px;
+.form-container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #1e1e1e;
+  display: flex;
+    justify-content: center;
+  align-items: center;
 }
-
-.ocr-upload {
-    /* background color, white */
-    background-color: #fff;
-    /* padding around the content */
-    padding: 20px;
-    /* maximum width of the upload container */
-    max-width: 500px;
-    /* automatic margins on top and bottom */
-    margin: 20px auto;
-    /* light box shadow to create depth */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.upload-files-container {
+  background-color: #333333;
+  width: 420px;
+  padding: 30px 60px;
+  border-radius: 40px;
+  display: flex;
+    align-items: center;
+    justify-content: center;
+  flex-direction: column;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 10px 20px, rgba(0, 0, 0, 0.28) 0px 6px 6px;
 }
-
-.ocr-upload form {
-    /* flex container settings */
-    display: flex;
-    flex-direction: column;
+.drag-file-area {
+  border: 2px dashed #c77dff;
+  border-radius: 40px;
+  margin: 10px 0 15px;
+  padding: 30px 50px;
+  width: 350px;
+  text-align: center;
 }
-
-.ocr-upload input[type="file"] {
-    /* Hide file input field */
-    display: none;
+.drag-file-area .upload-icon {
+  font-size: 50px;
 }
-
-.ocr-upload label {
-    /* style label with padding and margin */
-    padding: 10px 20px;
-    margin-bottom: 10px;
-
-    /* set label background color */
-    background-color: #eee;
-
-    /* set label cursor style to pointer */
-    cursor: pointer;
+.drag-file-area h3 {
+  font-size: 26px;
+  margin: 15px 0;
 }
-
-.ocr-upload input[type="submit"] {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+.drag-file-area label {
+  font-size: 19px;
 }
-
-.ocr-upload input[type="submit"]:hover {
-    background-color: #555;
+.drag-file-area label .browse-files-text {
+  color: #c77dff;
+  font-weight: bolder;
+  cursor: pointer;
+}
+.browse-files span {
+  position: relative;
+  top: -25px;
+}
+.default-file-input {
+  opacity: 0;
+}
+.cannot-upload-message {
+  background-color: #ffc6c4;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+  padding: 5px 10px 5px 30px;
+  border-radius: 5px;
+  color: #BB0000;
+  display: none;
+}
+@keyframes fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+.cannot-upload-message span, .upload-button-icon {
+  padding-right: 10px;
+}
+.cannot-upload-message span:last-child {
+  padding-left: 20px;
+  cursor: pointer;
+}
+.file-block {
+  color: #f7fff7;
+  background-color: #c77dff;
+    transition: all 1s;
+  width: 390px;
+  position: relative;
+  display: none;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0 15px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+}
+.file-info {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+}
+.file-icon {
+  margin-right: 10px;
+}
+.file-name, .file-size {
+  padding: 0 3px;
+}
+.remove-file-icon {
+  cursor: pointer;
+}
+.progress-bar {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  left: 4.5%;
+  width: 0;
+  height: 5px;
+  border-radius: 25px;
+  background-color: #4BB543;
+}
+.upload-button {
+  font-family: 'Montserrat';
+  background-color: #c77dff;
+  color: #f7fff7;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  border: none;
+  border-radius: 20px;
+  margin: 10px;
+  padding: 7.5px 50px;
+  cursor: pointer;
 }
