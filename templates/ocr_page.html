@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Document Retrieval</title>
+    <!-- Custom CSS-->
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ocr_styles.css') }}">
+    <!-- Added script for file name display -->
+    
+</head>
+<body>
+    <form class="form-container" action="/upload_file" method="post" enctype='multipart/form-data'>
+
+        <div class="upload-files-container">
+
+            <div class="drag-file-area">
+                <span class="material-icons-outlined upload-icon"> file_upload </span>
+                <h3 class="dynamic-message"> Drag & drop any file here </h3>
+                <label class="label"> or <span class="browse-files"> 
+                    <input type="file" id="myFile" name="filename" class="default-file-input"/>
+                    <span class="browse-files-text">browse file</span> 
+                    <span>from device</span> 
+                </span> </label>
+            </div>
+
+            <span class="cannot-upload-message"> 
+                <span class="material-icons-outlined">error</span> Please select a file first 
+                <span class="material-icons-outlined cancel-alert-button">cancel</span> 
+            </span>
+            
+            <div class="file-block">
+                <div class="file-info"> 
+                    <span class="material-icons-outlined file-icon">description</span> 
+                    <span class="file-name"> </span> | 
+                    <span class="file-size">  </span> 
+                </div>
+                <span class="material-icons remove-file-icon">delete</span>
+                <div class="progress-bar"> </div>
+            </div>
+
+            <!-- Custom JS -->
+            <script src="{{ url_for('static', filename='scripts/ocr.js') }}"></script>
+            
+            <button type="submit" class="upload-button"> Upload </button>
+            
+        </div>
+ 
+    </form>
+    
+</body>
+</html>
