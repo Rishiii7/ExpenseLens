@@ -1,7 +1,7 @@
 import json
 import requests
 
-with open('sample-response/response2.json', 'r') as file:
+with open('sample-response/response3.json', 'r') as file:
     raw_ocr_text = json.load(file)
 
 
