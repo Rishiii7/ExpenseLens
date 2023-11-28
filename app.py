@@ -14,7 +14,7 @@ os.environ["SSL_CERT_FILE"] = certifi.where()
 @app.route("/")
 def home():
     # Redirect user to index page
-    return render_template('ocr_page.html')
+    return render_template('verification.html')
 
 @app.route('/upload_file', methods=['POST'])
 def action_page():
@@ -64,6 +64,42 @@ def action_page():
     
     # Return a success message
     return render_template('ocr_success.html')
+
+@app.route('/verify/<user_name>/<file_name>', methods=['GET', 'POST'])
+def verify(user_name, file_name):
+    # Retrieve user and image details from the database
+    pool = sqlalchemy.create_engine(
+        "postgresql+pg8000://",
+        creator=getconn,
+    )
+    print(f"Connection established with the database")
+
+    result = pool.execute(sqlalchemy.text("SELECT * FROM user_images WHERE username = :username AND image_path = :image_path"), 
+                         {"username": user_name, "image_path": user_name+"/"+file_name}).fetchone()
+
+    if result is None:
+        # Handle the case where the record is not found
+        print(f"The fetched result: {result}")
+
+    # Extract the details for rendering on the verification page
+    user_name = result['username']
+    file_name = result['image_path']
+    # Extract other fields as needed
+
+    if request.method == 'POST':
+        # Handle the form submission with corrected data
+        corrected_data = {
+            'merchant_name': request.form['merchant_name']
+        }
+        
+        # update_user_image(pool, user_name, file_name, corrected_data)
+        print(f"corrected_data: {corrected_data}")
+        # Redirect to a success page or another action
+        return render_template('verification_page.html')
+
+    # Render the verification page
+    return render_template('verification_page.html', user_name=user_name, file_name=file_name)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
