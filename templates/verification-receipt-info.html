@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt Info</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/verification-receipt-info.css') }}">
+</head>
+<body>
+    <form class="form-container" action="/verify" method="post" enctype='multipart/form-data'>
+        <div class="container">
+            <div class="receipt-container">
+                <div class="receipt-info">
+                    Reciept Info
+                </div>
+                <div class="details">
+                    <label for="zipcode">Zipcode</label>
+                    <input class="form-input" type="text" id="zipcode" name="zipcode" placeholder="Zip code" value="{{ receipt_info.zip }}">
+                    <br>
+                    <label for="country">Country</label>
+                    <input class="form-input" type="text" id="country" name="country" placeholder="Country" value="{{ receipt_info.country }}">
+                    <button type="submit" class="upload-button"> Submit </button>
+                </div>
+            </div>
+            <div class="image-container">
+                <img class="receipt-image" src="{{ url_for('static', filename='Sample-Images/' + file_path) }}" alt="Uploaded Receipt">
+            </div>
+        </div>
+    </form>
+</body>
+</html>
