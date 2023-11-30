@@ -1,0 +1,29 @@
+- .DS_Store
+- .gitignore
+- README.md
+- Sample-Images
+  - .DS_Store
+  - Receipt.jpeg
+  - Receipt1.jpeg
+- app.py
+- requirements.txt
+- sample-response
+  - response1.json
+  - response2.json
+  - response3.json
+- src
+  - .DS_Store
+  - ocr
+    - ocr.py
+    - ocr_preprocessing.py
+    - ocr_utils.py
+- static
+  - css
+    - ocr_styles.css
+    - verification-receipt-info.css
+  - scripts
+    - ocr.js
+- templates
+  - ocr_page.html
+  - ocr_success.html
+  - verification-receipt-info.html
