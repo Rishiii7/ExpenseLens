@@ -25,7 +25,15 @@ def get_text_from_image(file_path : str):
 
 @app.route("/")
 def home():
-    # Redirect user to index page
+    # # Redirect user to index page
+    # json_file_path = 'sample-response/response3.json'
+    # receipt_processor = ReceiptProcessor(json_file_path)
+    # parsed_json = receipt_processor.parse_json()
+    # receipt_info = receipt_processor.extract_receipt_info(parsed_json)
+    # receipt_processor.print_receipt_info(receipt_info)
+
+    
+
     return render_template('ocr_page.html')
 
 
@@ -43,7 +51,7 @@ def action_page():
 
     # Save the uploaded file to a local folder
     # Later we need to save the file into S3 buckets
-    local_folder = 'Sample-Images/'
+    local_folder = 'static/Sample-Images/'
     if not os.path.exists(local_folder):
         os.makedirs(local_folder)
 
@@ -60,17 +68,33 @@ def action_page():
 
 
     # Return a success message
-    return render_template('verification-receipt-info.html', file_path=f"/" + file_path, receipt_info = receipt_info)
+    return render_template('verification-receipt-info.html', 
+                           file_path= f"Sample-Images/" + file_name, 
+                           receipt_info = receipt_info)
 
 @app.route("/verify", methods = ["POST", "GET"])
 def verify_receipt_info():
 
+    # Test This !!
+    merchant = request.form.get("merchant")
     zipcode = request.form.get("zipcode")
     country = request.form.get("country")
+    state = request.form.get("state")
+    city = request.form.get("city")
+    date = request.form.get("date")
+
 
     # Now you can use the retrieved values as needed
+    # For example, compare them with your own data and decide whether or not to process the transaction
+    print(f"Merchant name: {merchant}")
     print(f"ZIP Code: {zipcode}")
     print(f"Country: {country}")
+    print(f"State: {state}")
+    print(f"City: {city}")
+    print(f"Date: {date}")
+
+    # to push updated receipt into
+    #  SQL database
     return render_template("ocr_success.html") 
     # Redirecting to dashboard
 
