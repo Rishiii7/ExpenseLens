@@ -65,6 +65,12 @@ def action_page():
 @app.route("/verify", methods = ["POST", "GET"])
 def verify_receipt_info():
 
+    zipcode = request.form.get("zipcode")
+    country = request.form.get("country")
+
+    # Now you can use the retrieved values as needed
+    print(f"ZIP Code: {zipcode}")
+    print(f"Country: {country}")
     return render_template("ocr_success.html") 
     # Redirecting to dashboard
 
