@@ -1,8 +1,27 @@
 import os
 from flask import Flask, request, render_template, redirect
 
+from src.ocr.ocr import *
+from src.ocr.ocr_preprocessing import *
 
 app = Flask(__name__)
+
+
+def get_text_from_image(file_path : str):
+
+    # running ocr.py code
+    ocr = AspriseOCR()
+    ocr_result = ocr.perform_ocr('Sample-Images/Receipt1.jpeg')
+    json_file_path = 'sample-response/response3.json'
+    write_file_object(json_file_path, "w", ocr_result)
+
+    # running ocr_preprocessing.py code
+    receipt_processor = ReceiptProcessor(json_file_path)
+    parsed_json = receipt_processor.parse_json()
+    receipt_info = receipt_processor.extract_receipt_info(parsed_json)
+    receipt_processor.print_receipt_info(receipt_info)
+
+    return receipt_info
 
 @app.route("/")
 def home():
@@ -28,12 +47,27 @@ def action_page():
     if not os.path.exists(local_folder):
         os.makedirs(local_folder)
 
+    # This will be replaced by GCP sql code
     file_name = uploaded_file.filename
     file_path = os.path.join(local_folder, file_name)
     uploaded_file.save(file_path)
-    
+
+    # Call the OCR API here to extract the info
+    # from the image
+    receipt_info = get_text_from_image(file_path)
+
+    # print(ocr_info)
+
+
     # Return a success message
-    return render_template('ocr_success.html')
+    return render_template('verification-receipt-info.html', file_path=f"/" + file_path, receipt_info = receipt_info)
+
+@app.route("/verify", methods = ["POST", "GET"])
+def verify_receipt_info():
+
+    return render_template("ocr_success.html") 
+    # Redirecting to dashboard
+
 
 
 if __name__ == "__main__":
