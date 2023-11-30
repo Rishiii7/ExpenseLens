@@ -4,7 +4,7 @@ import json
 import requests
 import sys
 
-from ocr_utils import read_file_object, write_file_object
+from src.ocr.ocr_utils import read_file_object, write_file_object
 
 class AspriseOCR:
     def __init__(self, api_key='TEST'):
