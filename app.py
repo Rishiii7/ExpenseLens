@@ -69,7 +69,7 @@ def action_page():
 
     # Return a success message
     return render_template('verification-receipt-info.html', 
-                           file_path= f"Sample-Images/" + file_name, 
+                           image_path= f"Sample-Images/" + file_name, 
                            receipt_info = receipt_info)
 
 @app.route("/verify", methods = ["POST", "GET"])
