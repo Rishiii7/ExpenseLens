@@ -4,13 +4,13 @@ import json
 import requests
 import sys
 
-from ocr_utils import read_file_object, write_file_object
+from src.ocr.ocr_utils import read_file_object, write_file_object
 
 class AspriseOCR:
     def __init__(self, api_key='TEST'):
         self.api_key = api_key
 
-    def perform_ocr(self, image_path, recognizer='auto', ref_no='oct_python_123'):
+    def perform_ocr(self, image_path, recognizer='US', ref_no='oct_python_123'):
         """
         Performs Optical Character Recognition (OCR) on an image.
 

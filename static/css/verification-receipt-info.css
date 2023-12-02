@@ -1,0 +1,115 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #1f1f1f;  /* Dark background color */
+    color: #ffffff;  /* Light text color */
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    grid-gap: 20px;
+    width: 90%;
+    margin: auto;
+}
+
+.receipt-container, .image-container {
+    border: 1px solid #333;  /* Dark border color */
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #2f2f2f;  /* Slightly lighter background color */
+    width: 100%;
+    
+}
+
+.receipt-info {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #c77dff;  /* Accent color */
+    text-align: center; 
+}
+
+.details {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.details p {
+    margin: 0;
+    color: #ffffff;  /* Light text color */
+}
+
+
+
+.receipt-image {
+    max-width: 100%;
+    height: auto;
+    max-height: 80vh;
+    border: 1px solid #333;
+    margin-bottom: 20px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    background-color: #333;  /* Dark form input background */
+    color: #ffffff;  /* Light text color */
+    border: 1px solid #555;  /* Dark border color */
+}
+
+.upload-button {
+    font-family: 'Montserrat';
+    background-color: #c77dff;
+    color: #f7fff7;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    border: none;
+    border-radius: 20px;
+    margin: 10px;
+    padding: 7.5px 50px;
+    cursor: pointer;
+}
+
+.item-list {
+    margin-bottom: 20px;
+    
+}
+
+.item-scroll-container {
+    max-height: 100px;  /* Adjust the max height based on your design */
+    overflow-y: auto;   /* Enable vertical scrolling if needed */
+    border: 1px solid #333;  /* Dark border color */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.item-scroll-container ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.item-scroll-container li {
+    margin-bottom: 10px; /* Added more spacing between items */
+    display: flex;
+    justify-content: space-between; /* Align description and amount to opposite ends */
+}
+
+.item-scroll-container .item-description {
+    flex: 1; /* Allow the description to take available space */
+}
+
+.item-scroll-container .item-amount {
+    background-color: #c77dff;  /* Highlight color for amount */
+    color: #ffffff;  /* Text color for amount */
+    padding: 5px;  /* Padding for amount */
+    border-radius: 5px;  /* Rounded corners for amount */
+}

@@ -41,5 +41,36 @@ def insert_user_image(pool, user_name, gcs_blob_name):
         db_conn.execute(insert_stmt, {"username": user_name, "image_path": gcs_blob_name})
         db_transaction.commit()
         
+def create_receipt_details_table(pool):
+    with pool.connect() as db_conn:
+        db_transaction = db_conn.begin()
+        db_conn.execute("""
+            CREATE TABLE IF NOT EXISTS receipt_details (
+                id SERIAL PRIMARY KEY,
+                receipt_id INTEGER REFERENCES user_images(id),
+                category VARCHAR(50),
+                merchant_name VARCHAR(255),
+                city VARCHAR(50),
+                state VARCHAR(50),
+                country VARCHAR(50),
+                date VARCHAR(50),
+                product_details JSON,
+                total_amount DOUBLE PRECISION,
+                sub_total_amount DOUBLE PRECISION,
+                tax DOUBLE PRECISION
+            )
+        """)
+        db_transaction.commit()
+
+def insert_receipt_details(pool, user_id, receipt_details):
+    
+    insert_stmt = sqlalchemy.text(
+        "INSERT INTO receipt_details (receipt_id, category, merchant_name, city, state, country, date, product_details, total_amount, sub_total_amount, tax) VALUES (:receipt_id, :category, :merchant_name, :city, :state, :country, :date, :product_details, :total_amount, :sub_total_amount, :tax)"
+    )
+    with pool.connect() as db_conn:
+        db_transaction = db_conn.begin()
+        db_conn.execute(insert_stmt, {"receipt_id": int(user_id), "category": receipt_details["category"], "merchant_name": receipt_details["merchant_name"], "city": receipt_details["city"], "state": receipt_details["state"], "country": receipt_details["country"], "date": receipt_details["date"], "product_details": receipt_details["product_details"], "total_amount": float(receipt_details["total_amount"]), "sub_total_amount": float(receipt_details["sub_total_amount"]), "tax": float(receipt_details["tax"])})
+        db_transaction.commit()
+        
 def closeConnection():
     connector.close()
