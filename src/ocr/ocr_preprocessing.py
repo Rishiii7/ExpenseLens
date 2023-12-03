@@ -1,5 +1,5 @@
 import json
-from src.ocr.ocr_utils import read_file_object
+from ocr_utils import read_file_object
 from dataclasses import dataclass
 
 @dataclass
@@ -29,27 +29,20 @@ class ReceiptInfo:
 
 class ReceiptProcessor:
 
-    def __init__(self, file_path):
-        self.file_path = file_path
+    def __init__(self, ocr_result):
+        self.ocr_result = ocr_result
 
     def parse_json(self):
         return read_file_object(self.file_path, "r")
 
-    def extract_receipt_info(self, parsed_json):
-        receipt = parsed_json['receipts'][0]
+    def extract_receipt_info(self):
+        receipt = self.ocr_result['receipts'][0]
+        print(f"Recipts into OCR preprocessing : {receipt}")
         receipt_info = ReceiptInfo.from_json(receipt)
 
         # Additional processing if needed
 
         return receipt_info
-
-    def put_info_into_databases(self):
-        """
-        After verification from the user,
-        call a database object that should redirect to database.py
-        and insert the data into it.
-        """
-        pass
 
     def print_receipt_info(self, receipt_info):
         print(f"Your purchase at {receipt_info.merchant_name}")

@@ -1,27 +1,47 @@
 import os
+import base64
 from flask import Flask, request, render_template, redirect
+import requests
 
-from src.ocr.ocr import *
-from src.ocr.ocr_preprocessing import *
+from src.ocr.ocr_utils import *
 
 app = Flask(__name__)
 
 
+OCR_SERVER_URL = 'http://localhost:5001'
+
+
 def get_text_from_image(file_path : str):
 
+    image_file = read_file_object(file_path, "rb")
+    image_base64 = base64.b64encode(image_file).decode('utf-8')
+
+
+    response = requests.post(
+        f'{OCR_SERVER_URL}/perform_ocr',
+        json={'image_base64' : image_base64}
+    )
+
+    print(response.text)
+
+    if response.status_code == 200 :
+        receipt_info = response.json().get('receipt_info')
+        # print(ocr_result)
+        return receipt_info
+    else :
+        raise Exception(f"Error in OCR Server Response: {response.text}")
     # running ocr.py code
-    ocr = AspriseOCR()
-    ocr_result = ocr.perform_ocr('Sample-Images/Receipt1.jpeg')
-    json_file_path = 'sample-response/response3.json'
-    write_file_object(json_file_path, "w", ocr_result)
+    # ocr = AspriseOCR()
+    # ocr_result = ocr.perform_ocr(file_path)
+    # json_file_path = 'sample-response/response3.json'
+    # write_file_object(json_file_path, "w", ocr_result)
 
-    # running ocr_preprocessing.py code
-    receipt_processor = ReceiptProcessor(json_file_path)
-    parsed_json = receipt_processor.parse_json()
-    receipt_info = receipt_processor.extract_receipt_info(parsed_json)
-    receipt_processor.print_receipt_info(receipt_info)
+    # # running ocr_preprocessing.py code
+    # receipt_processor = ReceiptProcessor(json_file_path)
+    # parsed_json = receipt_processor.parse_json()
+    # receipt_info = receipt_processor.extract_receipt_info(parsed_json)
+    # receipt_processor.print_receipt_info(receipt_info)
 
-    return receipt_info
 
 @app.route("/")
 def home():
@@ -31,8 +51,6 @@ def home():
     # parsed_json = receipt_processor.parse_json()
     # receipt_info = receipt_processor.extract_receipt_info(parsed_json)
     # receipt_processor.print_receipt_info(receipt_info)
-
-    
 
     return render_template('ocr_page.html')
 
@@ -62,12 +80,12 @@ def action_page():
 
     # Call the OCR API here to extract the info
     # from the image
+
     receipt_info = get_text_from_image(file_path)
 
-    # print(ocr_info)
+    print(receipt_info['items'], '\n' ,type(receipt_info))
 
-
-    # Return a success message
+    # Return a succ ess message
     return render_template('verification-receipt-info.html', 
                            image_path= f"Sample-Images/" + file_name, 
                            receipt_info = receipt_info)
@@ -82,6 +100,7 @@ def verify_receipt_info():
     state = request.form.get("state")
     city = request.form.get("city")
     date = request.form.get("date")
+    item  =request.form.get("items")
 
 
     # Now you can use the retrieved values as needed
@@ -92,6 +111,7 @@ def verify_receipt_info():
     print(f"State: {state}")
     print(f"City: {city}")
     print(f"Date: {date}")
+    print(f"Items: {item}")
 
     # to push updated receipt into
     #  SQL database

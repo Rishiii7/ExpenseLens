@@ -16,7 +16,7 @@
                 <div class="details">
                     <!-- Merchant Name  -->
                     <label for="zipcode">Merchant</label>
-                    <input class="form-input" type="text" id="merchant" name="merchant" placeholder="Merchant Name" value="{{ receipt_info.merchant_name }}">
+                    <input class="form-input" type="text" id="merchant" name="merchant" placeholder="Merchant Name" value="{{ receipt_info['merchant_name'] }}">
                     <br>
                     <!-- Zip code  -->
                     <label for="zipcode">Zipcode</label>
@@ -38,12 +38,13 @@
                     <label for="date">date</label>
                     <input class="form-input" type="text" id="date" name="date" placeholder="date" value="{{ receipt_info.date }}">
                     <br>
-                  <!-- Display items with scrolling -->
+                    <!-- Display items with scrolling -->
+                    <input type="hidden" name="items" id="itemsInput">
                     <div class="item-list">
                         <label for="items">Items</label>
                         <div class="item-scroll-container">
                             <ul>
-                                {% for item in receipt_info.items %}
+                                {% for item in receipt_info['items'] %}
                                     <li>
                                         <span class="item-description">{{ item['description'] }}</span>
                                         <span class="item-amount">{{ item['amount'] }}</span>
@@ -52,6 +53,11 @@
                             </ul>
                         </div>
                     </div>
+                    <script>
+                        // Assuming receipt_info.items is a JSON-serializable list
+                        var itemsData = {{ receipt_info['items'] | tojson | safe }};
+                        document.getElementById('itemsInput').value = JSON.stringify(itemsData);
+                    </script>
                     <!-- Verification button -->
                     <button type="submit" class="upload-button"> Submit </button>
                 </div>
