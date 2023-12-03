@@ -42,6 +42,8 @@ class ReceiptProcessor:
         return read_file_object(self.file_path, "r")
 
     def extract_receipt_info(self):
+        print("*************************************")
+        print(f"In ocr Preprocessing : {self.ocr_result}")
         receipt = self.ocr_result['receipts'][0]
         print(f"Recipts into OCR preprocessing : {receipt}")
         receipt_info = ReceiptInfo.from_json(receipt)
