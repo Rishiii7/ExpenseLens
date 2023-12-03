@@ -1,12 +1,15 @@
 import os
 import base64
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, url_for, flash
 import requests
 
 from src.ocr.ocr_utils import *
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Change this to a secure secret key in a production environment
 
+# Dummy user credentials (in-memory storage)
+users = {'user1': 'password1', 'user2': 'password2'}
 
 OCR_SERVER_URL = 'http://localhost:5001'
 
@@ -26,33 +29,38 @@ def get_text_from_image(file_path : str):
 
     if response.status_code == 200 :
         receipt_info = response.json().get('receipt_info')
-        # print(ocr_result)
         return receipt_info
     else :
         raise Exception(f"Error in OCR Server Response: {response.text}")
-    # running ocr.py code
-    # ocr = AspriseOCR()
-    # ocr_result = ocr.perform_ocr(file_path)
-    # json_file_path = 'sample-response/response3.json'
-    # write_file_object(json_file_path, "w", ocr_result)
-
-    # # running ocr_preprocessing.py code
-    # receipt_processor = ReceiptProcessor(json_file_path)
-    # parsed_json = receipt_processor.parse_json()
-    # receipt_info = receipt_processor.extract_receipt_info(parsed_json)
-    # receipt_processor.print_receipt_info(receipt_info)
 
 
 @app.route("/")
-def home():
-    # # Redirect user to index page
-    # json_file_path = 'sample-response/response3.json'
-    # receipt_processor = ReceiptProcessor(json_file_path)
-    # parsed_json = receipt_processor.parse_json()
-    # receipt_info = receipt_processor.extract_receipt_info(parsed_json)
-    # receipt_processor.print_receipt_info(receipt_info)
+def index():
+    return redirect(url_for('home'))
 
-    return render_template('ocr_page.html')
+@app.route('/home')
+def home():
+    return render_template('login.html')
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    print(f"User name is : {username}")
+    print(f"Password is : {password}")
+
+    # Check if the username and password match the stored credentials
+    if username in users and users[username] == password:
+        return render_template('ocr_page.html')
+    else:
+        flash('Login failed. Please check your username and password.', 'error')
+        return redirect(url_for('home'))
+    
+
+@app.route('/dashboard')
+def dashboard():
+    return 'Welcome to the dashboard!'
 
 
 @app.route('/upload_file', methods=['POST'])
