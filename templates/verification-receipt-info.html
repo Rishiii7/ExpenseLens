@@ -65,7 +65,7 @@
                         <label for="items">Items</label>
                         <div class="item-scroll-container">
                             <ul>
-                                {% for item in receipt_info.items %}
+                                {% for item in receipt_info['items'] %}
                                     <li>
                                         <span class="item-description">{{ item['description'] }}</span>
                                         <span class="item-amount">{{ item['amount'] }}</span>
@@ -76,7 +76,7 @@
                     </div>
                     <script>
                         // Assuming receipt_info.items is a JSON-serializable list
-                        var itemsData = {{ receipt_info.items | tojson | safe }};
+                        var itemsData = {{ receipt_info['items'] | tojson | safe }};
                         document.getElementById('itemsInput').value = JSON.stringify(itemsData);
                     </script>
                     <!-- Verification button -->

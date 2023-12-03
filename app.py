@@ -2,17 +2,18 @@
 import os
 from flask import Flask, request, render_template
 import sqlalchemy
+import requests
 from src.database import getconn, create_user_images_table, insert_user_image, create_receipt_details_table, insert_receipt_details, closeConnection
 from src.storage import upload_to_gcs
-from src.ocr.ocr import *
-from src.ocr.ocr_preprocessing import *
 import certifi
 import json
+import base64
+from src.ocr.ocr_utils import *
 
 app = Flask(__name__)
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"Credentials/credentials.json"
-os.environ["SSL_CERT_FILE"] = certifi.where()
+os.environ["SSL_CERT_FILE"] = certifi.where()   
 user_name = 'user'
 image_name = ''
 
@@ -22,26 +23,52 @@ pool = sqlalchemy.create_engine(
     creator=getconn,
 )
 
+app = Flask(__name__)
+
+
+OCR_SERVER_URL = 'http://localhost:5001'
+
+
 def get_text_from_image(file_path : str):
 
+    image_file = read_file_object(file_path, "rb")
+    image_base64 = base64.b64encode(image_file).decode('utf-8')
+
+
+    response = requests.post(
+        f'{OCR_SERVER_URL}/perform_ocr',
+        json={'image_base64' : image_base64}
+    )
+
+    print(response.text)
+
+    if response.status_code == 200 :
+        receipt_info = response.json().get('receipt_info')
+        # print(ocr_result)
+        return receipt_info
+    else :
+        raise Exception(f"Error in OCR Server Response: {response.text}")
     # running ocr.py code
     # ocr = AspriseOCR()
     # ocr_result = ocr.perform_ocr(file_path)
-    # json_file_path = 'sample-response/response_'+file_path.split("/")[2]+'.json'
-    json_file_path = 'sample-response/response3'+'.json'
+    # json_file_path = 'sample-response/response3.json'
     # write_file_object(json_file_path, "w", ocr_result)
 
-    # running ocr_preprocessing.py code
-    receipt_processor = ReceiptProcessor(json_file_path)
-    parsed_json = receipt_processor.parse_json()
-    receipt_info = receipt_processor.extract_receipt_info(parsed_json)
-    receipt_processor.print_receipt_info(receipt_info)
-
-    return receipt_info
+    # # running ocr_preprocessing.py code
+    # receipt_processor = ReceiptProcessor(json_file_path)
+    # parsed_json = receipt_processor.parse_json()
+    # receipt_info = receipt_processor.extract_receipt_info(parsed_json)
+    # receipt_processor.print_receipt_info(receipt_info)
 
 @app.route("/")
 def home():
-    # Redirect user to index page
+    # # Redirect user to index page
+    # json_file_path = 'sample-response/response3.json'
+    # receipt_processor = ReceiptProcessor(json_file_path)
+    # parsed_json = receipt_processor.parse_json()
+    # receipt_info = receipt_processor.extract_receipt_info(parsed_json)
+    # receipt_processor.print_receipt_info(receipt_info)
+
     return render_template('ocr_page.html')
 
 @app.route('/upload_file', methods=['POST'])
@@ -63,6 +90,7 @@ def action_page():
     if not os.path.exists(local_folder):
         os.makedirs(local_folder)
 
+    # This will be replaced by GCP sql code
     file_name = uploaded_file.filename
     file_path = os.path.join(local_folder, file_name)
     uploaded_file.save(file_path)
@@ -90,8 +118,9 @@ def action_page():
     for row in result:
         print(row)
 
-    
-    # Return a success message
+    print(receipt_info['items'], '\n' ,type(receipt_info))
+
+    # Return a succ ess message
     return render_template('verification-receipt-info.html', 
                            image_path= f"Sample-Images/" + file_name, 
                            receipt_info = receipt_info)
