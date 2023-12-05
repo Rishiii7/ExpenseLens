@@ -11,6 +11,7 @@ import json
 import base64
 from src.ocr.ocr_utils import *
 import redis
+from src.analytics import analytics
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a secure secret key in a production environment
@@ -106,7 +107,17 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    
+    total_expenditure, cat_expenditure, merchant_list = analytics(pool, user_name)
+    
+    print(f"Total expenditure for user:{user_name} is: {total_expenditure}")
+    print(f"category level expenditure for user:{user_name} is: {cat_expenditure}")
+    print(f"Merchants visited by the user:{user_name} is: {merchant_list}")
+    
+    if cat_expenditure is None:
+        cat_expenditure = {}
+
+    return render_template('dashboard.html', user_name=user_name, total_expenditure=total_expenditure, cat_expenditure=cat_expenditure, merchant_list=merchant_list)
 
 @app.route('/intermediate')
 def intermediate():
@@ -250,10 +261,10 @@ def verify_receipt_info():
 
     # to push updated receipt into
     #  SQL database
-    insert_receipt_details(pool, user_id, receipt_details)
+    insert_receipt_details(pool, user_id, user_name, receipt_details)
     
     # # # query database
-    result = pool.execute(sqlalchemy.text("SELECT * from receipt_details_1")).fetchall()
+    result = pool.execute(sqlalchemy.text("SELECT * from receipt_details_2")).fetchall()
 
     # # # Do something with the results
     for row in result:
