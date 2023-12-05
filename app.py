@@ -10,20 +10,32 @@ import certifi
 import json
 import base64
 from src.ocr.ocr_utils import *
+import redis
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a secure secret key in a production environment
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"Credentials/credentials.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"credentials.json"
 os.environ["SSL_CERT_FILE"] = certifi.where()   
 user_name = 'user'
 image_name = ''
+
+# redis_host = os.environ.get('REDIS_HOST', 'localhost')
+# redis_port = os.environ.get('REDIS_PORT', '6379')
+# redis_keys = {
+#     "key1": "images",
+#     "key2": "receiptDetails"
+#     }
 
 # create connection pool
 pool = sqlalchemy.create_engine(
     "postgresql+pg8000://",
     creator=getconn,
 )
+
+# Redis configuration
+# r = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
+
 
 # Dummy user credentials (in-memory storage)
 users = {'user1': 'password1', 'user2': 'password2'}
@@ -68,7 +80,9 @@ def login():
 
     # Check if the username and password match the stored credentials
     if username in users and users[username] == password:
-        return render_template('ocr_page.html')
+        global user_name
+        user_name = username
+        return redirect(url_for('dashboard'))
     else:
         flash('Login failed. Please check your username and password.', 'error')
         return redirect(url_for('home'))
@@ -76,7 +90,11 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    return 'Welcome to the dashboard!'
+    return render_template('dashboard.html')
+
+@app.route('/intermediate')
+def intermediate():
+    return render_template('ocr_page.html')
 
 @app.route('/upload_file', methods=['POST'])
 def action_page():
@@ -111,6 +129,12 @@ def action_page():
     upload_to_gcs(file_path, gcs_blob_name)
         
     image_name = gcs_blob_name
+    
+    # # Pushing the user->image_path into cache
+    # r.lpush(redis_keys['key1'], json.dumps({"user_name": user_name, "image_path": image_name}))
+    
+    # # Pushing the user->receipt_details into cache
+    # r.lpush(redis_keys['key2'], json.dumps({"image_path": image_name, "receipt": receipt_info}))
 
     # create user_images table if not exists
     create_user_images_table(pool)
@@ -174,6 +198,25 @@ def verify_receipt_info():
         "tax" : tax
     }
     
+    # user_details = r.blpop(redis_keys['key1'], 0)
+    
+    # receipt = r.blpop(redis_keys['key2'], 0)
+    
+    # user_details_json = json.loads(user_details[1].decode('utf-8'))
+    # receipt_json = json.loads(receipt[1].decode('utf-8'))
+    
+    # print(f"user details from cache(before modification): {user_details_json}")
+    
+    # print(f"receipt details from cache(before modification): {receipt_json}")
+    
+    # receipt_json['receipt'] = receipt_details
+    
+    # # Pushing the user->image_path into cache
+    # r.lpush(redis_keys['key1'], json.dumps(user_details_json))
+    
+    # # Pushing the user->receipt_details into cache
+    # r.lpush(redis_keys['key2'], json.dumps(receipt_json))
+    
     # create receipt_details table if not exists
     create_receipt_details_table(pool)
     
@@ -194,7 +237,7 @@ def verify_receipt_info():
     insert_receipt_details(pool, user_id, receipt_details)
     
     # # # query database
-    result = pool.execute(sqlalchemy.text("SELECT * from receipt_details")).fetchall()
+    result = pool.execute(sqlalchemy.text("SELECT * from receipt_details_1")).fetchall()
 
     # # # Do something with the results
     for row in result:

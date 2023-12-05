@@ -45,7 +45,7 @@ def create_receipt_details_table(pool):
     with pool.connect() as db_conn:
         db_transaction = db_conn.begin()
         db_conn.execute("""
-            CREATE TABLE IF NOT EXISTS receipt_details (
+            CREATE TABLE IF NOT EXISTS receipt_details_1 (
                 id SERIAL PRIMARY KEY,
                 receipt_id INTEGER REFERENCES user_images(id),
                 category VARCHAR(50),
@@ -65,7 +65,7 @@ def create_receipt_details_table(pool):
 def insert_receipt_details(pool, user_id, receipt_details):
     
     insert_stmt = sqlalchemy.text(
-        "INSERT INTO receipt_details (receipt_id, category, merchant_name, city, state, country, date, product_details, total_amount, sub_total_amount, tax) VALUES (:receipt_id, :category, :merchant_name, :city, :state, :country, :date, :product_details, :total_amount, :sub_total_amount, :tax)"
+        "INSERT INTO receipt_details_1 (receipt_id, category, merchant_name, city, state, country, date, product_details, total_amount, sub_total_amount, tax) VALUES (:receipt_id, :category, :merchant_name, :city, :state, :country, :date, :product_details, :total_amount, :sub_total_amount, :tax)"
     )
     with pool.connect() as db_conn:
         db_transaction = db_conn.begin()

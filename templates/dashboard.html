@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        #sidebar {
+            position: fixed;
+            width: 250px;
+            height: 100%;
+            background-color: #333;
+            padding-top: 20px;
+        }
+
+        #sidebar a {
+            padding: 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        #sidebar a:hover {
+            background-color: #555;
+        }
+
+        #content {
+            margin-left: 250px;
+            padding: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <a href="{{ url_for('intermediate') }}">Upload</a>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+</div>
+
+<div id="content">
+    <!-- Your dashboard content goes here -->
+    <h2>Welcome to the Dashboard!</h2>
+</div>
+
+</body>
+</html>
