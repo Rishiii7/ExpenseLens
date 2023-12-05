@@ -41,6 +41,26 @@ def insert_user_image(pool, user_name, gcs_blob_name):
         db_conn.execute(insert_stmt, {"username": user_name, "image_path": gcs_blob_name})
         db_transaction.commit()
         
+def create_authentication_table(pool):
+    with pool.connect() as db_conn:
+        db_transaction = db_conn.begin()
+        db_conn.execute("""
+            CREATE TABLE IF NOT EXISTS authentication (
+                username VARCHAR(255) PRIMARY KEY,
+                password VARCHAR(255)
+            )
+        """)
+        db_transaction.commit()
+
+def insert_authentication_details(pool, user_name, password):
+    insert_stmt = sqlalchemy.text(
+        "INSERT INTO authentication (username, password) VALUES (:username, :password)"
+    )
+    with pool.connect() as db_conn:
+        db_transaction = db_conn.begin()
+        db_conn.execute(insert_stmt, {"username": user_name, "password": password})
+        db_transaction.commit()
+        
 def create_receipt_details_table(pool):
     with pool.connect() as db_conn:
         db_transaction = db_conn.begin()

@@ -4,7 +4,7 @@ import sqlalchemy
 import base64
 from flask import Flask, request, render_template, redirect, url_for, flash
 import requests
-from src.database import getconn, create_user_images_table, insert_user_image, create_receipt_details_table, insert_receipt_details, closeConnection
+from src.database import getconn, create_user_images_table, insert_user_image, create_receipt_details_table, insert_receipt_details, create_authentication_table, insert_authentication_details, closeConnection
 from src.storage import upload_to_gcs
 import certifi
 import json
@@ -72,21 +72,37 @@ def home():
 
 @app.route('/login', methods=['POST'])
 def login():
+    global user_name
+    
     username = request.form.get('username')
     password = request.form.get('password')
 
     print(f"User name is : {username}")
     print(f"Password is : {password}")
+    
+    create_authentication_table(pool)
+    
+    result = pool.execute(sqlalchemy.text("SELECT * from authentication WHERE username = :username"),{"username": username}).fetchall()
 
-    # Check if the username and password match the stored credentials
-    if username in users and users[username] == password:
-        global user_name
+    if not result:
+        # Username doesn't exist, so insert the new username and password
+        insert_authentication_details(pool, username, password)
+        print("New user created successfully")
+        
         user_name = username
         return redirect(url_for('dashboard'))
     else:
-        flash('Login failed. Please check your username and password.', 'error')
-        return redirect(url_for('home'))
-    
+        # Username exists, check if the password matches
+        stored_password = result[0][1]  # Assuming password is the second column in your authentication table
+        if stored_password == password:
+            print("Successful")
+            user_name = username
+            return redirect(url_for('dashboard'))
+        else:
+            print("Incorrect password")
+            flash('Login failed. Please check your username and password.', 'error')
+            return redirect(url_for('home'))
+
 
 @app.route('/dashboard')
 def dashboard():
