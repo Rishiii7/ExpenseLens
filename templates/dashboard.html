@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
             background-color: #f4f4f4;
         }
 
         #sidebar {
-            position: fixed;
-            width: 250px;
-            height: 100%;
             background-color: #333;
             padding-top: 20px;
+            min-height: 100vh; /* Full height of the viewport */
         }
 
         #sidebar a {
@@ -34,66 +34,80 @@
         }
 
         #content {
-            margin-left: 550px;
-            padding: 350px;
+            padding: 16px;
         }
     </style>
-    <!-- Include Chart.js library -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-<div id="sidebar">
-    <a href="{{ url_for('intermediate') }}">Upload</a>
-    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
+            <div class="sidebar-sticky">
+                <a href="{{ url_for('intermediate') }}" class="nav-link">Upload</a>
+                <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+            <h2>Welcome to the Dashboard, {{ user_name }}!</h2>
+            
+            <!-- Display Total Expenditure -->
+            <p>Total Expenditure: {{ total_expenditure }}</p>
+            
+            <!-- Display Category-wise Expenditure in a Pie Chart -->
+            <canvas id="pieChart" width="30" height="30"></canvas>
+            
+            <!-- Display Unique Merchants in a Table -->
+            <h2>Unique Merchants</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Merchant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for merchant in merchant_list %}
+                    <tr>
+                        <td>{{ merchant }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </main>
+    </div>
 </div>
 
-<div id="content">
-    <h2>Welcome to the Dashboard, {{ user_name }}!</h2>
-    
-    <!-- Display Total Expenditure -->
-    <p>Total Expenditure: {{ total_expenditure }}</p>
-    
-    <!-- Display Category-wise Expenditure in a Pie Chart -->
-    <canvas id="pieChart" width="40" height="40"></canvas>
-    
-    <!-- Display Unique Merchants in a Table -->
-    <h2>Unique Merchants</h2>
-    <table border="1">
-        <tr>
-            <th>Merchant</th>
-        </tr>
-        {% for merchant in merchant_list %}
-        <tr>
-            <td>{{ merchant }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+<script>
+    // JavaScript code to create a small pie chart
+    var ctx = document.getElementById('pieChart').getContext('2d');
+    var data = {
+        labels: Object.keys({{ cat_expenditure|tojson|safe }}),
+        datasets: [{
+            data: Object.values({{ cat_expenditure|tojson|safe }}),
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(153, 102, 255, 0.7)',
+            ],
+        }],
+    };
+    var options = {};
+    var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: data,
+        options: options,
+    });
+</script>
 
-    <script>
-        // JavaScript code to create a pie chart
-        var ctx = document.getElementById('pieChart').getContext('2d');
-        var data = {
-            labels: Object.keys({{ cat_expenditure|tojson|safe }}),
-            datasets: [{
-                data: Object.values({{ cat_expenditure|tojson|safe }}),
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.7)',
-                    'rgba(54, 162, 235, 0.7)',
-                    'rgba(255, 206, 86, 0.7)',
-                    'rgba(75, 192, 192, 0.7)',
-                    'rgba(153, 102, 255, 0.7)',
-                ],
-            }],
-        };
-        var options = {};
-        var myPieChart = new Chart(ctx, {
-            type: 'pie',
-            data: data,
-            options: options,
-        });
-    </script>
-</div>
+<!-- Include Bootstrap JS and Popper.js -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 </body>
 </html>
