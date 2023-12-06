@@ -1,30 +1,13 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard.css') }}">
-    Add any additional styles or libraries you might need for cards/widgets 
-</head>
-<body>
-
-<div id="sidebar">
-    <a href="{{ url_for('intermediate') }}">Upload</a>
-    <a href="{{ url_for('dashboard') }}">Dashboard</a>
-</div> -->
-
 {% extends 'base.html' %}
 
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-
 <div id="content" class="grid-container">
     <!-- Card 1 -->
     <div class="card">
         <div class="percentage-change">Percentage Change</div>
-        <div class="percentage-value">+10%</div>
+        <div class="percentage-value">+110%</div>
     </div>
     
     <!-- Card 2 -->
@@ -36,7 +19,7 @@
     <!-- Card 4 -->
     <div class="card">
         <div class="chart-placeholder">
-            <canvas id="dummyPieChart" width="150" height="150"></canvas>
+            <canvas id="barChart" width="400" height="200"></canvas>
         </div>
     </div>
 
@@ -73,57 +56,102 @@
     <!-- Card 6 -->
     <div class="card">
         <div class="chart-placeholder">
-            <canvas id="dummyPercentageChart" width="150" height="150"></canvas>
+            <canvas id="dummyLineChart" width="150" height="150"></canvas>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-    // Dummy data for pie chart
-    const dummyPieChartData = [30, 40, 20, 10];
+    // Dummy data for the bar chart
+    const data = [30, 50, 80, 120, 200];
 
-    // Dummy data for percentage-wise category distribution
-    const dummyPercentageChartData = [25, 35, 15, 25];
+    // Get the canvas element and its context
+    const canvas = document.getElementById('barChart');
+    const ctx = canvas.getContext('2d');
 
-    // Function to draw a dummy pie chart
-    function drawDummyPieChart(canvasId, data) {
-        const canvas = document.getElementById(canvasId);
-        const ctx = canvas.getContext('2d');
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        const radius = canvas.width / 3;
+    // Bar chart settings
+    const barWidth = 40;
+    const barSpacing = 20;
+    const chartHeight = canvas.height - 30;
+    const maxDataValue = Math.max(...data);
 
-        let startAngle = 0;
-        for (let i = 0; i < data.length; i++) {
-            const sliceAngle = (2 * Math.PI * data[i]) / 100;
-            const endAngle = startAngle + sliceAngle;
+    // Bar color
+    const barColor = '#3498db';
 
-            ctx.beginPath();
-            ctx.moveTo(centerX, centerY);
-            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-            ctx.fillStyle = getRandomColor(); // Generate random color for each slice
-            ctx.fill();
-
-            startAngle = endAngle;
-        }
+    // Function to draw a bar
+    function drawBar(x, height) {
+      ctx.fillStyle = barColor;
+      ctx.fillRect(x, chartHeight - height, barWidth, height);
     }
 
-    // Function to get a random color
-    function getRandomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
+    // Function to draw the entire bar chart
+    function drawBarChart() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw bars based on the data
+      for (let i = 0; i < data.length; i++) {
+        const barHeight = (data[i] / maxDataValue) * chartHeight;
+        const x = i * (barWidth + barSpacing);
+        drawBar(x, barHeight);
+      }
+
+      // Draw labels
+      ctx.fillStyle = '#000';
+      ctx.textAlign = 'center';
+      ctx.font = '14px Arial';
+
+      for (let i = 0; i < data.length; i++) {
+        const x = i * (barWidth + barSpacing) + barWidth / 2;
+        const y = chartHeight + 20;
+        ctx.fillText(`Label ${i + 1}`, x, y);
+      }
     }
 
-    // Draw dummy pie charts
-    drawDummyPieChart('dummyPieChart', dummyPieChartData);
-    drawDummyPieChart('dummyPercentageChart', dummyPercentageChartData);
-</script>
+    // Call the function to draw the initial bar chart
+    drawBarChart();
+
+
+    // Dummy data for the line chart
+    const lineChartData = {
+        labels: ['January', 'February', 'March', 'April', 'May'],
+        datasets: [{
+            label: 'Dummy Line Chart',
+            borderColor: '#e74c3c',
+            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+            data: [10, 30, 50, 20, 40],
+            fill: true,
+        }]
+    };
+
+    // Get the canvas element and its context for the line chart
+    const lineCanvas = document.getElementById('dummyLineChart').getContext('2d');
+
+    // Create the line chart
+    new Chart(lineCanvas, {
+        type: 'line',
+        data: lineChartData,
+        options: {
+            scales: {
+                x: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Month'
+                    }
+                }],
+                y: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Value'
+                    }
+                }]
+            }
+        }
+    });
+    
+  </script>
 
 {% endblock %}
-
-<!-- </body>
-</html> -->
