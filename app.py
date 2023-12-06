@@ -69,7 +69,7 @@ def index():
 
 @app.route('/home')
 def home():
-    return render_template('login.html')
+    return redirect(url_for('dashboard'))
 
 @app.route('/login', methods=['POST'])
 def login():

@@ -8,21 +8,23 @@
     color: #ffffff;
   }
   .form-container {
-    width: 100vw;
+    width: 80vw;
     height: 100vh;
     background-color: #1e1e1e;
     display: flex;
-      justify-content: center;
+    justify-content: center;
     align-items: center;
+    margin: 0; /* Reset margin to ensure no extra space around the form */
+    padding: 0;
   }
-  .upload-files-container {
+  #content .upload-files-container {
     background-color: #333333;
     width: 420px;
     padding: 30px 60px;
     border-radius: 40px;
     display: flex;
-      align-items: center;
-      justify-content: center;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 10px 20px, rgba(0, 0, 0, 0.28) 0px 6px 6px;
   }

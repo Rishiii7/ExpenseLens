@@ -1,67 +1,49 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <!-- Include Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <!-- Include Chart.js library -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-        }
-
-        #sidebar {
-            background-color: #333;
-            padding-top: 20px;
-            min-height: 100vh; /* Full height of the viewport */
-        }
-
-        #sidebar a {
-            padding: 15px;
-            text-decoration: none;
-            font-size: 18px;
-            color: white;
-            display: block;
-            transition: 0.3s;
-        }
-
-        #sidebar a:hover {
-            background-color: #555;
-        }
-
-        #content {
-            padding: 16px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    Add any additional styles or libraries you might need for cards/widgets 
 </head>
 <body>
 
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
-            <div class="sidebar-sticky">
-                <a href="{{ url_for('intermediate') }}" class="nav-link">Upload</a>
-                <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
-            </div>
-        </nav>
+<div id="sidebar">
+    <a href="{{ url_for('intermediate') }}">Upload</a>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+</div> -->
 
-        <!-- Main content -->
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-            <h2>Welcome to the Dashboard, {{ user_name }}!</h2>
-            
-            <!-- Display Total Expenditure -->
-            <p>Total Expenditure: {{ total_expenditure }}</p>
-            
-            <!-- Display Category-wise Expenditure in a Pie Chart -->
-            <canvas id="pieChart" width="30" height="30"></canvas>
-            
-            <!-- Display Unique Merchants in a Table -->
-            <h2>Unique Merchants</h2>
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div id="content" class="grid-container">
+    <!-- Card 1 -->
+    <div class="card">
+        <div class="percentage-change">Percentage Change</div>
+        <div class="percentage-value">+10%</div>
+    </div>
+    
+    <!-- Card 2 -->
+    <div class="card">Total Expenditure: {{ total_expenditure }}</div>
+
+    <!-- Card 3 -->
+    <div class="card">Top Category: Entertainment</div>
+
+    <!-- Card 4 -->
+    <div class="card">
+        <div class="chart-placeholder">
+           <!-- Display Category-wise Expenditure in a Pie Chart -->
+           <canvas id="pieChart" width="30" height="30"></canvas>
+        </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="card">
+        <h2>Unique Merchants</h2>
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -76,7 +58,13 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </main>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="card">
+        <div class="chart-placeholder">
+            <canvas id="dummyPercentageChart" width="150" height="150"></canvas>
+        </div>
     </div>
 </div>
 

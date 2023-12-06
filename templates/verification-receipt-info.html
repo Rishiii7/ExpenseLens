@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,7 +6,12 @@
     <title>Receipt Info</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/verification-receipt-info.css') }}">
 </head>
-<body>
+<body> -->
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
     <form class="form-container" action="/verify" method="post" enctype='multipart/form-data'>
         <div class="container">
             <div class="receipt-container">
@@ -89,5 +94,8 @@
             </div>
         </div>
     </form>
-</body>
-</html>
+
+{% endblock %}
+
+<!-- </body>
+</html> -->
