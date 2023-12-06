@@ -1,16 +1,20 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OCR Document Retrieval</title>
-    <!-- Custom CSS-->
-    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ocr_styles.css') }}">
-    <!-- Added script for file name display -->
-    
+     Custom CSS-->
+    <!-- <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ocr_styles.css') }}"> -->
+    <!-- Added script for file name display
 </head>
-<body>
+<body> -->
+{% extends 'base.html' %}
+
+{% block title %}OCR Document Retrieval{% endblock %}
+
+{% block content %}
     <form class="form-container" action="/upload_file" method="post" enctype='multipart/form-data'>
 
         <div class="upload-files-container">
@@ -48,6 +52,7 @@
         </div>
  
     </form>
-    
-</body>
-</html>
+
+{% endblock %}
+<!-- </body>
+</html> -->

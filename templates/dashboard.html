@@ -1,0 +1,129 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    Add any additional styles or libraries you might need for cards/widgets 
+</head>
+<body>
+
+<div id="sidebar">
+    <a href="{{ url_for('intermediate') }}">Upload</a>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+</div> -->
+
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div id="content" class="grid-container">
+    <!-- Card 1 -->
+    <div class="card">
+        <div class="percentage-change">Percentage Change</div>
+        <div class="percentage-value">+10%</div>
+    </div>
+    
+    <!-- Card 2 -->
+    <div class="card">Total Spend: $500</div>
+
+    <!-- Card 3 -->
+    <div class="card">Top Category: Entertainment</div>
+
+    <!-- Card 4 -->
+    <div class="card">
+        <div class="chart-placeholder">
+            <canvas id="dummyPieChart" width="150" height="150"></canvas>
+        </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="card">
+        <h3>Latest Transactions</h3>
+        <table class="transaction-details">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Country</th>
+                    <th>City</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Food</td>
+                    <td>USA</td>
+                    <td>New York</td>
+                    <td>$50</td>
+                </tr>
+                <tr>
+                    <td>Travel</td>
+                    <td>UK</td>
+                    <td>London</td>
+                    <td>$100</td>
+                </tr>
+                <!-- Add more transaction items as needed -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="card">
+        <div class="chart-placeholder">
+            <canvas id="dummyPercentageChart" width="150" height="150"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Dummy data for pie chart
+    const dummyPieChartData = [30, 40, 20, 10];
+
+    // Dummy data for percentage-wise category distribution
+    const dummyPercentageChartData = [25, 35, 15, 25];
+
+    // Function to draw a dummy pie chart
+    function drawDummyPieChart(canvasId, data) {
+        const canvas = document.getElementById(canvasId);
+        const ctx = canvas.getContext('2d');
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = canvas.width / 3;
+
+        let startAngle = 0;
+        for (let i = 0; i < data.length; i++) {
+            const sliceAngle = (2 * Math.PI * data[i]) / 100;
+            const endAngle = startAngle + sliceAngle;
+
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+            ctx.fillStyle = getRandomColor(); // Generate random color for each slice
+            ctx.fill();
+
+            startAngle = endAngle;
+        }
+    }
+
+    // Function to get a random color
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    // Draw dummy pie charts
+    drawDummyPieChart('dummyPieChart', dummyPieChartData);
+    drawDummyPieChart('dummyPercentageChart', dummyPercentageChartData);
+</script>
+
+{% endblock %}
+
+<!-- </body>
+</html> -->

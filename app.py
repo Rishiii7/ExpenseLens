@@ -40,7 +40,7 @@ def index():
 
 @app.route('/home')
 def home():
-    return render_template('login.html')
+    return redirect(url_for('dashboard'))
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -60,7 +60,11 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    return 'Welcome to the dashboard!'
+    return render_template('dashboard.html')
+
+@app.route('/intermediate')
+def intermediate():
+    return render_template('ocr_page.html')
 
 
 @app.route('/upload_file', methods=['POST'])
