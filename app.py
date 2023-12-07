@@ -12,6 +12,7 @@ import base64
 from src.ocr.ocr_utils import *
 import redis
 from src.analytics import analytics
+import pandas as pd
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a secure secret key in a production environment
@@ -69,7 +70,7 @@ def index():
 
 @app.route('/home')
 def home():
-    return redirect(url_for('dashboard'))
+    return render_template('login.html')
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -108,16 +109,39 @@ def login():
 @app.route('/dashboard')
 def dashboard():
     
-    total_expenditure, cat_expenditure, merchant_list = analytics(pool, user_name)
+    total_expenditure, cat_expenditure, merchant_list, highest_spending_category, monthly_expense = analytics(pool, user_name)
     
     print(f"Total expenditure for user:{user_name} is: {total_expenditure}")
     print(f"category level expenditure for user:{user_name} is: {cat_expenditure}")
     print(f"Merchants visited by the user:{user_name} is: {merchant_list}")
+    print(f"Highest spending category by the user:{user_name} is: {highest_spending_category}")
+    print(f"Monthly expenditure trends:{user_name} is: {monthly_expense}")
+    
+    # Convert DataFrame to list of dictionaries
+    monthly_expense_dict = monthly_expense.to_dict(orient='records')
+    print(f"Monthly expenditure trends in the form of dictionary:{user_name} is: {monthly_expense_dict}")
     
     if cat_expenditure is None:
         cat_expenditure = {}
+        
+    x_labels_monthly_expenditure = monthly_expense['month_year'].tolist()
+    y_values_monthly_expenditure = monthly_expense['total_amount'].tolist()
+    
+    y_values_monthly_expenditure = y_values_monthly_expenditure
 
-    return render_template('dashboard.html', user_name=user_name, total_expenditure=total_expenditure, cat_expenditure=cat_expenditure, merchant_list=merchant_list)
+    print("X Labels:", x_labels_monthly_expenditure)
+    print("Y Values:", y_values_monthly_expenditure)
+    print(f"Type of Expenditure is : {type(total_expenditure[1])}")
+    print(f"Type of Y values is : {(y_values_monthly_expenditure)}")
+
+    return render_template('dashboard.html', 
+                           user_name=user_name, 
+                           total_expenditure=total_expenditure[1], 
+                           cat_expenditure=cat_expenditure, 
+                           merchant_list=merchant_list, 
+                           highest_spending_category = highest_spending_category, 
+                           x_labels_monthly_expenditure = x_labels_monthly_expenditure, 
+                           y_values_monthly_expenditure = y_values_monthly_expenditure)
 
 @app.route('/intermediate')
 def intermediate():

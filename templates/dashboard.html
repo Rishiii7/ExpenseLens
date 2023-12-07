@@ -1,101 +1,148 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard.css') }}">
-    Add any additional styles or libraries you might need for cards/widgets 
-</head>
-<body>
-
-<div id="sidebar">
-    <a href="{{ url_for('intermediate') }}">Upload</a>
-    <a href="{{ url_for('dashboard') }}">Dashboard</a>
-</div> -->
-
 {% extends 'base.html' %}
 
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
 
-<div id="content" class="grid-container">
-    <!-- Card 1 -->
-    <div class="card">
-        <div class="percentage-change">Percentage Change</div>
-        <div class="percentage-value">+10%</div>
-    </div>
-    
-    <!-- Card 2 -->
-    <div class="card">Total Expenditure: {{ total_expenditure }}</div>
+<div id="content">
+    <!-- Row 1 -->
+    <div class="row row1">
+        <!-- Card 1 -->
+        <div class="column">
+            <div class="card">
+                <div class="percentage-change">Percentage Change</div>
+                <div class="percentage-value">+10%</div>
+            </div>
+        </div>
 
-    <!-- Card 3 -->
-    <div class="card">Top Category: Entertainment</div>
+        <!-- Card 2 -->
+        <div class="column">
+            <div class="card">
+                <div class="total_expenditure">Total Expenditure</div>
+                <div class="total_expenditure-value">{{ total_expenditure }}</div>
+            </div>
+        </div>
 
-    <!-- Card 4 -->
-    <div class="card">
-        <div class="chart-placeholder">
-           <!-- Display Category-wise Expenditure in a Pie Chart -->
-           <canvas id="pieChart" width="30" height="30"></canvas>
+        <!-- Card 3 -->
+        <div class="column">
+            <div class="card">
+                <div class="top-category">Top Category</div>
+                <div class="top-category-value">{{ highest_spending_category }}</div>
+            </div>
         </div>
     </div>
 
-    <!-- Card 5 -->
-    <div class="card">
-        <h2>Unique Merchants</h2>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Merchant</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for merchant in merchant_list %}
-                    <tr>
-                        <td>{{ merchant }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <!-- Row 2 -->
+    <div class="row row2">
+        <!-- Card 4 -->
+        <div class="column">
+            <div class="card card-4-5">
+                <div class="chart-placeholder">
+                    <!-- Display Category-wise Expenditure in a Pie Chart -->
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="column">
+            <div class="card card-4-5">
+                <h2>You have shopped at .......</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Merchant names</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for merchant in merchant_list %}
+                        <tr>
+                            <td>{{ merchant }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <!-- Card 6 -->
-    <div class="card">
-        <div class="chart-placeholder">
-            <canvas id="dummyPercentageChart" width="150" height="150"></canvas>
+    <!-- Row 3 -->
+    <div class="row row3">
+        <!-- Card 6 -->
+        <div class="column">
+            <div class="card card-6">
+                <div class="chart-placeholder">
+                    <!-- Display Monthly Expenditure Trends in a Bar Chart -->
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // JavaScript code to create a small pie chart
-    var ctx = document.getElementById('pieChart').getContext('2d');
-    var data = {
-        labels: Object.keys({{ cat_expenditure|tojson|safe }}),
-        datasets: [{
-            data: Object.values({{ cat_expenditure|tojson|safe }}),
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.7)',
-                'rgba(54, 162, 235, 0.7)',
-                'rgba(255, 206, 86, 0.7)',
-                'rgba(75, 192, 192, 0.7)',
-                'rgba(153, 102, 255, 0.7)',
-            ],
-        }],
-    };
-    var options = {};
-    var myPieChart = new Chart(ctx, {
-        type: 'pie',
-        data: data,
-        options: options,
-    });
-</script>
+    document.addEventListener('DOMContentLoaded', function () {
+            console.log("Category Expenditure Data:", {{ cat_expenditure|tojson|safe }});
+    
+            // JavaScript code to create a small pie chart
+            var ctxPie = document.getElementById('pieChart').getContext('2d');
+            var dataPie = {
+                labels: Object.keys({{ cat_expenditure|tojson|safe }}),
+                datasets: [{
+                    data: Object.values({{ cat_expenditure|tojson|safe }}),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                    ],
+                }],
+            };
+            var optionsPie = {
+                responsive: true,
+                maintainAspectRatio: false,
+            };
+            var myPieChart = new Chart(ctxPie, {
+                type: 'pie',
+                data: dataPie,
+                options: optionsPie,
+            });
 
+            console.log("Monthly Expenditure x labels:", {{ x_labels_monthly_expenditure|tojson|safe }});
+            console.log("Monthly Expenditure y labels:", {{  y_values_monthly_expenditure}});
+    
+    
+            const xValues = {{ x_labels_monthly_expenditure|tojson|safe }};
+            const yValues = {{ y_values_monthly_expenditure}};
+
+
+            new Chart("myChart", {
+                type: "line",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                    fill: false,
+                    lineTension: 0,
+                    backgroundColor: "rgba(0,0,255,1.0)",
+                    borderColor: "rgba(0,0,255,0.1)",
+                    data: yValues
+                    }]
+                },
+                options: {
+                    legend: {display: true},
+                    scales: {
+                    yAxes: [{ticks: {min: 6, max:16}}],
+                    }
+                }
+            });
+        });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Include Bootstrap JS and Popper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-</body>
-</html>
+{% endblock %}
