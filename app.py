@@ -127,7 +127,7 @@ def verify_receipt_info():
 
     # to push updated receipt into
     #  SQL database
-    return render_template("ocr_success.html") 
+    return redirect(url_for("dashboard"))
     # Redirecting to dashboard
 
 
