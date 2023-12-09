@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expenselens-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: expenselens-microservice
+  template:
+    metadata:
+      labels:
+        app: expenselens-microservice
+    spec:
+      containers:
+      - name: expenselens-microservice
+        image: mprach/expenselens-microservice:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+          protocol: TCP
