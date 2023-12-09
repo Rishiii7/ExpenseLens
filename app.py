@@ -15,7 +15,6 @@ from src.analytics import analytics
 import pandas as pd
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Change this to a secure secret key in a production environment
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"credentials.json"
 os.environ["SSL_CERT_FILE"] = certifi.where()   
@@ -37,10 +36,6 @@ pool = sqlalchemy.create_engine(
 
 # Redis configuration
 # r = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
-
-
-# Dummy user credentials (in-memory storage)
-users = {'user1': 'password1', 'user2': 'password2'}
 
 OCR_SERVER_URL = 'http://localhost:5001'
 
@@ -109,12 +104,12 @@ def login():
 @app.route('/dashboard')
 def dashboard():
     
-    total_expenditure, cat_expenditure, merchant_list, highest_spending_category, monthly_expense = analytics(pool, user_name)
+    total_expenditure, cat_expenditure, transaction_details, highest_spending_category_latest_month, monthly_expense, percentage_change = analytics(pool, user_name)
     
     print(f"Total expenditure for user:{user_name} is: {total_expenditure}")
     print(f"category level expenditure for user:{user_name} is: {cat_expenditure}")
-    print(f"Merchants visited by the user:{user_name} is: {merchant_list}")
-    print(f"Highest spending category by the user:{user_name} is: {highest_spending_category}")
+    print(f"Latest transactions by the user:{user_name} is: {transaction_details}")
+    print(f"Highest spending category by the user:{user_name} is: {highest_spending_category_latest_month}")
     print(f"Monthly expenditure trends:{user_name} is: {monthly_expense}")
     
     # Convert DataFrame to list of dictionaries
@@ -131,17 +126,20 @@ def dashboard():
 
     print("X Labels:", x_labels_monthly_expenditure)
     print("Y Values:", y_values_monthly_expenditure)
-    print(f"Type of Expenditure is : {type(total_expenditure[1])}")
+    # print(f"Type of Expenditure is : {type(total_expenditure)}")
     print(f"Type of Y values is : {(y_values_monthly_expenditure)}")
+    
+    print(f"Percentage change in expenditure:{user_name} is: {percentage_change}")
 
     return render_template('dashboard.html', 
                            user_name=user_name, 
-                           total_expenditure=total_expenditure[1], 
+                           total_expenditure=total_expenditure, 
                            cat_expenditure=cat_expenditure, 
-                           merchant_list=merchant_list, 
-                           highest_spending_category = highest_spending_category, 
+                           transaction_details=transaction_details, 
+                           highest_spending_category = highest_spending_category_latest_month, 
                            x_labels_monthly_expenditure = x_labels_monthly_expenditure, 
-                           y_values_monthly_expenditure = y_values_monthly_expenditure)
+                           y_values_monthly_expenditure = y_values_monthly_expenditure,
+                           percentage_change = percentage_change)
 
 @app.route('/intermediate')
 def intermediate():
@@ -222,8 +220,6 @@ def verify_receipt_info():
     tax = request.form.get("tax")
     items = request.form.get("items")
 
-    # Now you can use the retrieved values as needed
-    # For example, compare them with your own data and decide whether or not to process the transaction
     print(f"Merchant name: {merchant}")
     print(f"ZIP Code: {zipcode}")
     print(f"Country: {country}")
@@ -260,14 +256,6 @@ def verify_receipt_info():
     
     # print(f"receipt details from cache(before modification): {receipt_json}")
     
-    # receipt_json['receipt'] = receipt_details
-    
-    # # Pushing the user->image_path into cache
-    # r.lpush(redis_keys['key1'], json.dumps(user_details_json))
-    
-    # # Pushing the user->receipt_details into cache
-    # r.lpush(redis_keys['key2'], json.dumps(receipt_json))
-    
     # create receipt_details table if not exists
     create_receipt_details_table(pool)
     
@@ -295,7 +283,7 @@ def verify_receipt_info():
         print(row)
 
     
-    return render_template("ocr_success.html") 
+    return redirect(url_for('dashboard')) 
     # Redirecting to dashboard
 
 

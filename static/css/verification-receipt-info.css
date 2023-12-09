@@ -1,13 +1,12 @@
-body {
+/* body {
     font-family: Arial, sans-serif;
     display: flex;
-    justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #1f1f1f;  /* Dark background color */
-    color: #ffffff;  /* Light text color */
-}
+    background-color: #1f1f1f;  
+    color: #ffffff; 
+} */
 
 .container {
     display: grid;
@@ -47,7 +46,7 @@ body {
 
 
 .receipt-image {
-    max-width: 100%;
+    max-width: 80%;
     height: auto;
     max-height: 80vh;
     border: 1px solid #333;
