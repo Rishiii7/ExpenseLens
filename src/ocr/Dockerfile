@@ -6,4 +6,4 @@ RUN pip3 install --upgrade Flask requests dataclasses
 
 COPY . /app
 
-ENTRYPOINT ["python", "ocr-server.py"]
+ENTRYPOINT ["python3", "ocr-server.py"]

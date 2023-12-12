@@ -8,6 +8,15 @@
     background-color: #1f1f1f;  
     color: #ffffff; 
 } */
+.verification-container{
+    width: 100%;
+    height: 100%;
+}
+
+.verification-form-container{
+    width: 100%;
+    height: 100%;
+}
 
 .container {
     display: grid;
@@ -30,7 +39,7 @@
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #c77dff;  /* Accent color */
+    color: #ffffff;  /* Accent color */
     text-align: center; 
 }
 
@@ -44,6 +53,25 @@
     color: #ffffff;  /* Light text color */
 }
 
+.styled-select {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    line-height: 1.3;
+    color: #444;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.styled-select:focus {
+    border-color: #66afe9;
+    outline: 0;
+    box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+}
+
 
 
 .receipt-image {
@@ -52,6 +80,13 @@
     max-height: 80vh;
     border: 1px solid #333;
     margin-bottom: 20px;
+    display: block; 
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .form-input {
@@ -66,7 +101,7 @@
 
 .upload-button {
     font-family: 'Montserrat';
-    background-color: #c77dff;
+    background-color: #3b8dcc;
     color: #f7fff7;
     display: flex;
     align-items: center;
@@ -108,7 +143,7 @@
 }
 
 .item-scroll-container .item-amount {
-    background-color: #c77dff;  /* Highlight color for amount */
+    background-color: #3b8dcc;  /* Highlight color for amount */
     color: #ffffff;  /* Text color for amount */
     padding: 5px;  /* Padding for amount */
     border-radius: 5px;  /* Rounded corners for amount */

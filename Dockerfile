@@ -8,4 +8,4 @@ RUN pip install --upgrade pip
 
 RUN pip3 install -r requirements.txt
 
-ENTRYPOINT ["python", "app.py"]
+ENTRYPOINT ["python3", "app.py"]

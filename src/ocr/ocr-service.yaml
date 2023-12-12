@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ocr-service
+  name: ocr-microservice
 spec:
   selector:
     app: ocr-microservice

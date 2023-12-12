@@ -14,8 +14,13 @@ spec:
     spec:
       containers:
       - name: expenselens-microservice
-        image: mprach/expenselens-microservice:latest
+        image: mprach/expenselens-microservice:v5
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
           protocol: TCP
+        env:
+        - name: OCR_URL
+          value: "localhost:5001"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: "credentials.json"

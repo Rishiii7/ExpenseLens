@@ -1,4 +1,4 @@
-VERSION=v2
+VERSION=v5
 DOCKERUSER=mprach
 
 build:

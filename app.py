@@ -1,32 +1,36 @@
 # app.py
 import os
+import certifi
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"credentials.json"
+os.environ["SSL_CERT_FILE"] = certifi.where()
+
 import sqlalchemy
 import base64
 from flask import Flask, request, render_template, redirect, url_for, flash
 import requests
 from src.database import getconn, create_user_images_table, insert_user_image, create_receipt_details_table, insert_receipt_details, create_authentication_table, insert_authentication_details, closeConnection
 from src.storage import upload_to_gcs
-import certifi
 import json
 import base64
 from src.ocr.ocr_utils import *
 import redis
 from src.analytics import analytics
 import pandas as pd
+import sys
 
 app = Flask(__name__)
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"credentials.json"
-os.environ["SSL_CERT_FILE"] = certifi.where()   
+
 user_name = 'user'
 image_name = ''
 
-# redis_host = os.environ.get('REDIS_HOST', 'localhost')
-# redis_port = os.environ.get('REDIS_PORT', '6379')
-# redis_keys = {
-#     "key1": "images",
-#     "key2": "receiptDetails"
-#     }
+redis_host = os.environ.get('REDIS_HOST', 'localhost')
+redis_port = os.environ.get('REDIS_PORT', '6379')
+redis_keys = {
+    "key1": "images",
+    "key2": "receiptDetails"
+    }
 
 # create connection pool
 pool = sqlalchemy.create_engine(
@@ -35,10 +39,23 @@ pool = sqlalchemy.create_engine(
 )
 
 # Redis configuration
-# r = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
+r = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
 
-OCR_SERVER_URL = 'http://localhost:5001'
+OCR_SERVER_URL = os.environ.get('OCR_URL', 'localhost:5001')
+print(f"This is OCR Server URl : {OCR_SERVER_URL}")
+OCR_SERVER_URL = 'localhost:5001'
 
+infoKey = "rest.info"
+debugKey = "rest.debug"
+def log_debug(message, key=debugKey):
+    print("DEBUG:", message, file=sys.stdout)
+    redisClient = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
+    redisClient.lpush('logging', f"{debugKey}:{message}")
+
+def log_info(message, key=infoKey):
+    print("INFO:", message, file=sys.stdout)
+    redisClient = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
+    redisClient.lpush('logging', f"{infoKey}:{message}")
 
 def get_text_from_image(file_path : str):
 
@@ -47,7 +64,7 @@ def get_text_from_image(file_path : str):
 
 
     response = requests.post(
-        f'{OCR_SERVER_URL}/perform_ocr',
+        f'http://{OCR_SERVER_URL}/perform_ocr',
         json={'image_base64' : image_base64}
     )
 
@@ -93,10 +110,12 @@ def login():
         stored_password = result[0][1]  # Assuming password is the second column in your authentication table
         if stored_password == password:
             print("Successful")
+            log_info(f"User: {username} has logged in successfully")
             user_name = username
             return redirect(url_for('dashboard'))
         else:
             print("Incorrect password")
+            log_info(f"User: {username} login failed")
             flash('Login failed. Please check your username and password.', 'error')
             return redirect(url_for('home'))
 
@@ -179,11 +198,11 @@ def action_page():
         
     image_name = gcs_blob_name
     
-    # # Pushing the user->image_path into cache
-    # r.lpush(redis_keys['key1'], json.dumps({"user_name": user_name, "image_path": image_name}))
+    # Pushing the user->image_path into cache
+    r.lpush(redis_keys['key1'], json.dumps({"user_name": user_name, "image_path": image_name}))
     
-    # # Pushing the user->receipt_details into cache
-    # r.lpush(redis_keys['key2'], json.dumps({"image_path": image_name, "receipt": receipt_info}))
+    # Pushing the user->receipt_details into cache
+    r.lpush(redis_keys['key2'], json.dumps({"image_path": image_name, "receipt": receipt_info}))
 
     # create user_images table if not exists
     create_user_images_table(pool)
@@ -245,16 +264,16 @@ def verify_receipt_info():
         "tax" : tax
     }
     
-    # user_details = r.blpop(redis_keys['key1'], 0)
+    user_details = r.blpop(redis_keys['key1'], 0)
     
-    # receipt = r.blpop(redis_keys['key2'], 0)
+    receipt = r.blpop(redis_keys['key2'], 0)
     
-    # user_details_json = json.loads(user_details[1].decode('utf-8'))
-    # receipt_json = json.loads(receipt[1].decode('utf-8'))
+    user_details_json = json.loads(user_details[1].decode('utf-8'))
+    receipt_json = json.loads(receipt[1].decode('utf-8'))
     
-    # print(f"user details from cache(before modification): {user_details_json}")
+    print(f"user details from cache(before modification): {user_details_json}")
     
-    # print(f"receipt details from cache(before modification): {receipt_json}")
+    print(f"receipt details from cache(before modification): {receipt_json}")
     
     # create receipt_details table if not exists
     create_receipt_details_table(pool)

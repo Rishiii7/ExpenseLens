@@ -12,7 +12,8 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-    <form class="form-container" action="/verify" method="post" enctype='multipart/form-data'>
+<div class="verification-container">
+    <form class="verification-form-container" action="/verify" method="post" enctype='multipart/form-data'>
         <div class="container">
             <div class="receipt-container">
                 <div class="receipt-info">
@@ -20,7 +21,7 @@
                 </div>
                 <div class="details">
                     <label for="category">Category</label>
-                    <select id="category" name="category">
+                    <select id="category" name="category" class="styled-select">
                         <option value="Groceries">Groceries</option>
                         <option value="Clothing/Accessories">Clothing/Accessories</option>
                         <option value="Food and Dining">Food and Dining</option>
@@ -94,7 +95,7 @@
             </div>
         </div>
     </form>
-
+</div>
 {% endblock %}
 
 <!-- </body>
