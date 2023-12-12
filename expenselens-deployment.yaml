@@ -21,6 +21,10 @@ spec:
           protocol: TCP
         env:
         - name: OCR_URL
-          value: "localhost:5001"
+          value: "ocr-microservice:5001"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: "credentials.json"
+        - name: REDIS_HOST
+          value: "redis"
+        - name: REDIS_PORT
+          value: "6379"

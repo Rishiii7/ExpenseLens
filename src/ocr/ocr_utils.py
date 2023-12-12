@@ -1,6 +1,7 @@
 import json
 
 
+
 def read_file_object(file_path, mode):
     with open(file_path, mode) as f:
         if mode == "r":
