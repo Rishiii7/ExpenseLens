@@ -45,8 +45,8 @@ OCR_SERVER_URL = os.environ.get('OCR_URL', 'localhost:5001')
 print(f"This is OCR Server URl : {OCR_SERVER_URL}")
 OCR_SERVER_URL = 'localhost:5001'
 
-infoKey = "rest.info"
-debugKey = "rest.debug"
+infoKey = "app.info"
+debugKey = "app.debug"
 def log_debug(message, key=debugKey):
     print("DEBUG:", message, file=sys.stdout)
     redisClient = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
@@ -91,8 +91,10 @@ def login():
     username = request.form.get('username')
     password = request.form.get('password')
 
-    print(f"User name is : {username}")
-    print(f"Password is : {password}")
+    # print(f"User name is : {username}")
+    # print(f"Password is : {password}")
+
+    log_info(f"Attempting login for user: {username}")
     
     create_authentication_table(pool)
     
@@ -101,7 +103,8 @@ def login():
     if not result:
         # Username doesn't exist, so insert the new username and password
         insert_authentication_details(pool, username, password)
-        print("New user created successfully")
+        # print("New user created successfully")
+        log_info("New user created successfully")
         
         user_name = username
         return redirect(url_for('dashboard'))
@@ -115,21 +118,28 @@ def login():
             return redirect(url_for('dashboard'))
         else:
             print("Incorrect password")
-            log_info(f"User: {username} login failed")
+            log_info(f"User: {username} login failed - Incorrect password")
             flash('Login failed. Please check your username and password.', 'error')
             return redirect(url_for('home'))
 
 
 @app.route('/dashboard')
 def dashboard():
+    log_info(f"Entering dashboard for user: {user_name}")
     
     total_expenditure, cat_expenditure, transaction_details, highest_spending_category_latest_month, monthly_expense, percentage_change = analytics(pool, user_name)
     
-    print(f"Total expenditure for user:{user_name} is: {total_expenditure}")
-    print(f"category level expenditure for user:{user_name} is: {cat_expenditure}")
-    print(f"Latest transactions by the user:{user_name} is: {transaction_details}")
-    print(f"Highest spending category by the user:{user_name} is: {highest_spending_category_latest_month}")
-    print(f"Monthly expenditure trends:{user_name} is: {monthly_expense}")
+    # print(f"Total expenditure for user:{user_name} is: {total_expenditure}")
+    # print(f"category level expenditure for user:{user_name} is: {cat_expenditure}")
+    # print(f"Latest transactions by the user:{user_name} is: {transaction_details}")
+    # print(f"Highest spending category by the user:{user_name} is: {highest_spending_category_latest_month}")
+    # print(f"Monthly expenditure trends:{user_name} is: {monthly_expense}")
+
+    log_debug(f"Total expenditure for user:{user_name} is: {total_expenditure}")
+    log_debug(f"category level expenditure for user:{user_name} is: {cat_expenditure}")
+    log_debug(f"Latest transactions by the user:{user_name} is: {transaction_details}")
+    log_debug(f"Highest spending category by the user:{user_name} is: {highest_spending_category_latest_month}")
+    log_debug(f"Monthly expenditure trends:{user_name} is: {monthly_expense}")
     
     # Convert DataFrame to list of dictionaries
     monthly_expense_dict = monthly_expense.to_dict(orient='records')
@@ -166,6 +176,7 @@ def intermediate():
 
 @app.route('/upload_file', methods=['POST'])
 def action_page():
+    log_info("Entering upload_file route")
     
     global image_name
     
@@ -197,6 +208,9 @@ def action_page():
     upload_to_gcs(file_path, gcs_blob_name)
         
     image_name = gcs_blob_name
+
+    log_debug(f"Image path: {file_path}")
+    log_debug(f"Receipt info: {receipt_info}")
     
     # Pushing the user->image_path into cache
     r.lpush(redis_keys['key1'], json.dumps({"user_name": user_name, "image_path": image_name}))
@@ -226,6 +240,7 @@ def action_page():
 
 @app.route("/verify", methods = ["POST", "GET"])
 def verify_receipt_info():
+    log_info("Entering verify_receipt_info route")
 
     category = request.form.get("category")
     merchant = request.form.get("merchant")
@@ -239,16 +254,27 @@ def verify_receipt_info():
     tax = request.form.get("tax")
     items = request.form.get("items")
 
-    print(f"Merchant name: {merchant}")
-    print(f"ZIP Code: {zipcode}")
-    print(f"Country: {country}")
-    print(f"State: {state}")
-    print(f"City: {city}")
-    print(f"Date: {date}")
-    print(f"Total amount: {total_amount}")
-    print(f"Sub-total amount: {sub_total_amount}")
-    print(f"Tax: {tax}")
-    print(f"Category: {category}")
+    # print(f"Merchant name: {merchant}")
+    # print(f"ZIP Code: {zipcode}")
+    # print(f"Country: {country}")
+    # print(f"State: {state}")
+    # print(f"City: {city}")
+    # print(f"Date: {date}")
+    # print(f"Total amount: {total_amount}")
+    # print(f"Sub-total amount: {sub_total_amount}")
+    # print(f"Tax: {tax}")
+    # print(f"Category: {category}")
+
+    log_debug(f"Merchant name: {merchant}")
+    log_debug(f"ZIP Code: {zipcode}")
+    log_debug(f"Country: {country}")
+    log_debug(f"State: {state}")
+    log_debug(f"City: {city}")
+    log_debug(f"Date: {date}")
+    log_debug(f"Total amount: {total_amount}")
+    log_debug(f"Sub-total amount: {sub_total_amount}")
+    log_debug(f"Tax: {tax}")
+    log_debug(f"Category: {category}")
     
     receipt_details = {
         "category" : category,
@@ -265,30 +291,35 @@ def verify_receipt_info():
     }
     
     user_details = r.blpop(redis_keys['key1'], 0)
-    
     receipt = r.blpop(redis_keys['key2'], 0)
     
     user_details_json = json.loads(user_details[1].decode('utf-8'))
     receipt_json = json.loads(receipt[1].decode('utf-8'))
     
-    print(f"user details from cache(before modification): {user_details_json}")
-    
-    print(f"receipt details from cache(before modification): {receipt_json}")
+    # print(f"user details from cache(before modification): {user_details_json}")
+    # print(f"receipt details from cache(before modification): {receipt_json}")
+
+    log_debug(f"user details from cache(before modification): {user_details_json}")
+    log_debug(f"receipt details from cache(before modification): {receipt_json}")
     
     # create receipt_details table if not exists
     create_receipt_details_table(pool)
     
-    print(f"username: {user_name}")
+    # print(f"username: {user_name}")
+    log_debug(f"username: {user_name}")
     
     image_path = image_name
+    log_debug(f"image_path: {image_path}")
     
-    print(f"image_path: {image_path}")
     # query database
     user_image_details = pool.execute(sqlalchemy.text("SELECT id from user_images WHERE username=:username and image_path=:image_path"), {"username": user_name, "image_path": image_path}).fetchall()
     user_id = user_image_details[0][0]
-    print(f"user id : {user_id}")
-    
-    print(f"items: {items}")
+
+    # print(f"user id : {user_id}")
+    # print(f"items: {items}")
+
+    log_debug(f"user id : {user_id}")
+    log_debug(f"items: {items}")
 
     # to push updated receipt into
     #  SQL database
