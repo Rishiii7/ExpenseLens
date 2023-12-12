@@ -1,6 +1,7 @@
 # Final Project Repository
 
-Team: (PUT YOUR TEAM MEMBERS NAMES HERE)
+Team: Prachitee Maratkar, Rishikesh Solapure
+
 
 You need to provide us access to your code repository.
 
