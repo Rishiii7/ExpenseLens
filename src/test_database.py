@@ -14,19 +14,6 @@ from database import (
 
 class TestDatabase(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        # Setup any necessary configurations for testing at the class level
-        pass
-
-    def setUp(self):
-        # Setup any necessary test-specific configurations before each test method runs
-        pass
-
-    def tearDown(self):
-        # Clean up after each test
-        pass
-
     def test_getconn(self):
         # Test the getconn function to ensure it returns a valid connection
         connection = getconn()

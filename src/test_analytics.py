@@ -13,19 +13,6 @@ from analytics import (
 
 class TestAnalytics(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        # Setup any necessary configurations for testing at the class level
-        pass
-
-    def setUp(self):
-        # Setup any necessary test-specific configurations before each test method runs
-        pass
-
-    def tearDown(self):
-        # Clean up resources or perform any necessary cleanup after each test method runs
-        pass
-
     def test_calculate_total_expenditure_latest_month(self):
         # Test the function with a mock connection pool and sample data
         pool = MagicMock()

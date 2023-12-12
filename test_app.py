@@ -7,16 +7,7 @@ class TestApp(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # Setup any necessary configurations for testing
         cls.app = app.test_client()
-
-    def setUp(self):
-        # Setup any necessary test-specific configurations
-        pass
-
-    def tearDown(self):
-        # Clean up after each test
-        pass
 
     def test_index_redirect(self):
         response = self.app.get('/')

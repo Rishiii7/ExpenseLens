@@ -4,19 +4,6 @@ from ocr import AspriseOCR
 from unittest.mock import MagicMock, patch
 
 class TestOCR(unittest.TestCase):
-    
-    @classmethod
-    def setUpClass(cls):
-        # Setup any necessary configurations for testing
-        pass
-
-    def setUp(self):
-        # Setup any necessary test-specific configurations
-        pass
-
-    def tearDown(self):
-        # Clean up after each test
-        pass
 
     def test_perform_ocr_from_bytes_success(self):
         # Test the AspriseOCR method perform_ocr_from_bytes with a successful response

@@ -1,22 +1,13 @@
 # test_ocr_server.py
 import unittest
-from cocr_server import app_ocr
+from ocr_server import app_ocr
 from unittest.mock import MagicMock, patch
 
 class TestOCRServer(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        # Setup any necessary configurations for testing at the class level
-        pass
-
     def setUp(self):
         # Setup any necessary test-specific configurations before each test method runs
         self.app = app_ocr.test_client()
-
-    def tearDown(self):
-        # Clean up resources or perform any necessary cleanup after each test method runs
-        pass
 
     def test_perform_ocr_success(self):
         # Test the perform_ocr endpoint with a successful OCR and pre-processing
