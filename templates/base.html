@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Your Website Title{% endblock %}</title>
+    <!-- Add common CSS, JavaScript, or other head elements here -->
+    <!-- For example, link to your sidebar CSS file -->
+    <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sidebar.css') }}"-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ocr_styles.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/verification-receipt-info.css') }}">
+</head>
+<body>
+
+<!-- Common sidebar -->
+<div id="sidebar">
+    <a href="{{ url_for('intermediate') }}">Upload</a>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    <!-- Add more sidebar links as needed -->
+</div>
+
+<!-- Content specific to each page -->
+<div id="content">
+    {% block content %}{% endblock %}
+</div>
+
+<!-- Add common scripts or other elements here -->
+
+</body>
+</html>

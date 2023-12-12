@@ -1,20 +1,36 @@
 # app.py
 import os
-from flask import Flask, request, render_template
-import sqlalchemy
-from src.database import getconn, create_user_images_table, insert_user_image, create_receipt_details_table, insert_receipt_details, closeConnection
-from src.storage import upload_to_gcs
-from src.ocr.ocr import *
-from src.ocr.ocr_preprocessing import *
 import certifi
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"credentials.json"
+os.environ["SSL_CERT_FILE"] = certifi.where()
+
+import sqlalchemy
+import base64
+from flask import Flask, request, render_template, redirect, url_for, flash
+import requests
+from src.database import getconn, create_user_images_table, insert_user_image, create_receipt_details_table, insert_receipt_details, create_authentication_table, insert_authentication_details, closeConnection
+from src.storage import upload_to_gcs
 import json
+import base64
+from src.ocr.ocr_utils import *
+import redis
+from src.analytics import analytics
+import pandas as pd
+import sys
 
 app = Flask(__name__)
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"Credentials/credentials.json"
-os.environ["SSL_CERT_FILE"] = certifi.where()
+
 user_name = 'user'
 image_name = ''
+
+redis_host = os.environ.get('REDIS_HOST', 'localhost')
+redis_port = os.environ.get('REDIS_PORT', '6379')
+redis_keys = {
+    "key1": "images",
+    "key2": "receiptDetails"
+    }
 
 # create connection pool
 pool = sqlalchemy.create_engine(
@@ -22,26 +38,130 @@ pool = sqlalchemy.create_engine(
     creator=getconn,
 )
 
+# Redis configuration
+r = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
+
+OCR_SERVER_URL = os.environ.get('OCR_URL', 'localhost:5001')
+print(f"This is OCR Server URl : {OCR_SERVER_URL}")
+OCR_SERVER_URL = 'localhost:5001'
+
+infoKey = "rest.info"
+debugKey = "rest.debug"
+def log_debug(message, key=debugKey):
+    print("DEBUG:", message, file=sys.stdout)
+    redisClient = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
+    redisClient.lpush('logging', f"{debugKey}:{message}")
+
+def log_info(message, key=infoKey):
+    print("INFO:", message, file=sys.stdout)
+    redisClient = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
+    redisClient.lpush('logging', f"{infoKey}:{message}")
+
 def get_text_from_image(file_path : str):
 
-    # running ocr.py code
-    # ocr = AspriseOCR()
-    # ocr_result = ocr.perform_ocr(file_path)
-    # json_file_path = 'sample-response/response_'+file_path.split("/")[2]+'.json'
-    json_file_path = 'sample-response/response3'+'.json'
-    # write_file_object(json_file_path, "w", ocr_result)
+    image_file = read_file_object(file_path, "rb")
+    image_base64 = base64.b64encode(image_file).decode('utf-8')
 
-    # running ocr_preprocessing.py code
-    receipt_processor = ReceiptProcessor(json_file_path)
-    parsed_json = receipt_processor.parse_json()
-    receipt_info = receipt_processor.extract_receipt_info(parsed_json)
-    receipt_processor.print_receipt_info(receipt_info)
 
-    return receipt_info
+    response = requests.post(
+        f'http://{OCR_SERVER_URL}/perform_ocr',
+        json={'image_base64' : image_base64}
+    )
+
+    print(response.text)
+
+    if response.status_code == 200 :
+        receipt_info = response.json().get('receipt_info')
+        return receipt_info
+    else :
+        raise Exception(f"Error in OCR Server Response: {response.text}")
 
 @app.route("/")
+def index():
+    return redirect(url_for('home'))
+
+@app.route('/home')
 def home():
-    # Redirect user to index page
+    return render_template('login.html')
+
+@app.route('/login', methods=['POST'])
+def login():
+    global user_name
+    
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    print(f"User name is : {username}")
+    print(f"Password is : {password}")
+    
+    create_authentication_table(pool)
+    
+    result = pool.execute(sqlalchemy.text("SELECT * from authentication WHERE username = :username"),{"username": username}).fetchall()
+
+    if not result:
+        # Username doesn't exist, so insert the new username and password
+        insert_authentication_details(pool, username, password)
+        print("New user created successfully")
+        
+        user_name = username
+        return redirect(url_for('dashboard'))
+    else:
+        # Username exists, check if the password matches
+        stored_password = result[0][1]  # Assuming password is the second column in your authentication table
+        if stored_password == password:
+            print("Successful")
+            log_info(f"User: {username} has logged in successfully")
+            user_name = username
+            return redirect(url_for('dashboard'))
+        else:
+            print("Incorrect password")
+            log_info(f"User: {username} login failed")
+            flash('Login failed. Please check your username and password.', 'error')
+            return redirect(url_for('home'))
+
+
+@app.route('/dashboard')
+def dashboard():
+    
+    total_expenditure, cat_expenditure, transaction_details, highest_spending_category_latest_month, monthly_expense, percentage_change = analytics(pool, user_name)
+    
+    print(f"Total expenditure for user:{user_name} is: {total_expenditure}")
+    print(f"category level expenditure for user:{user_name} is: {cat_expenditure}")
+    print(f"Latest transactions by the user:{user_name} is: {transaction_details}")
+    print(f"Highest spending category by the user:{user_name} is: {highest_spending_category_latest_month}")
+    print(f"Monthly expenditure trends:{user_name} is: {monthly_expense}")
+    
+    # Convert DataFrame to list of dictionaries
+    monthly_expense_dict = monthly_expense.to_dict(orient='records')
+    print(f"Monthly expenditure trends in the form of dictionary:{user_name} is: {monthly_expense_dict}")
+    
+    if cat_expenditure is None:
+        cat_expenditure = {}
+        
+    x_labels_monthly_expenditure = monthly_expense['month_year'].tolist()
+    y_values_monthly_expenditure = monthly_expense['total_amount'].tolist()
+    
+    y_values_monthly_expenditure = y_values_monthly_expenditure
+
+    print("X Labels:", x_labels_monthly_expenditure)
+    print("Y Values:", y_values_monthly_expenditure)
+    # print(f"Type of Expenditure is : {type(total_expenditure)}")
+    print(f"Type of Y values is : {(y_values_monthly_expenditure)}")
+    
+    print(f"Percentage change in expenditure:{user_name} is: {percentage_change}")
+
+    return render_template('dashboard.html', 
+                           user_name=user_name, 
+                           total_expenditure=total_expenditure, 
+                           cat_expenditure=cat_expenditure, 
+                           transaction_details=transaction_details, 
+                           highest_spending_category = highest_spending_category_latest_month, 
+                           x_labels_monthly_expenditure = x_labels_monthly_expenditure, 
+                           y_values_monthly_expenditure = y_values_monthly_expenditure,
+                           percentage_change = percentage_change)
+
+@app.route('/intermediate')
+def intermediate():
     return render_template('ocr_page.html')
 
 @app.route('/upload_file', methods=['POST'])
@@ -63,6 +183,7 @@ def action_page():
     if not os.path.exists(local_folder):
         os.makedirs(local_folder)
 
+    # This will be replaced by GCP sql code
     file_name = uploaded_file.filename
     file_path = os.path.join(local_folder, file_name)
     uploaded_file.save(file_path)
@@ -76,6 +197,12 @@ def action_page():
     upload_to_gcs(file_path, gcs_blob_name)
         
     image_name = gcs_blob_name
+    
+    # Pushing the user->image_path into cache
+    r.lpush(redis_keys['key1'], json.dumps({"user_name": user_name, "image_path": image_name}))
+    
+    # Pushing the user->receipt_details into cache
+    r.lpush(redis_keys['key2'], json.dumps({"image_path": image_name, "receipt": receipt_info}))
 
     # create user_images table if not exists
     create_user_images_table(pool)
@@ -90,8 +217,9 @@ def action_page():
     for row in result:
         print(row)
 
-    
-    # Return a success message
+    print(receipt_info['items'], '\n' ,type(receipt_info))
+
+    # Return a succ ess message
     return render_template('verification-receipt-info.html', 
                            image_path= f"Sample-Images/" + file_name, 
                            receipt_info = receipt_info)
@@ -111,8 +239,6 @@ def verify_receipt_info():
     tax = request.form.get("tax")
     items = request.form.get("items")
 
-    # Now you can use the retrieved values as needed
-    # For example, compare them with your own data and decide whether or not to process the transaction
     print(f"Merchant name: {merchant}")
     print(f"ZIP Code: {zipcode}")
     print(f"Country: {country}")
@@ -138,6 +264,17 @@ def verify_receipt_info():
         "tax" : tax
     }
     
+    user_details = r.blpop(redis_keys['key1'], 0)
+    
+    receipt = r.blpop(redis_keys['key2'], 0)
+    
+    user_details_json = json.loads(user_details[1].decode('utf-8'))
+    receipt_json = json.loads(receipt[1].decode('utf-8'))
+    
+    print(f"user details from cache(before modification): {user_details_json}")
+    
+    print(f"receipt details from cache(before modification): {receipt_json}")
+    
     # create receipt_details table if not exists
     create_receipt_details_table(pool)
     
@@ -155,17 +292,17 @@ def verify_receipt_info():
 
     # to push updated receipt into
     #  SQL database
-    insert_receipt_details(pool, user_id, receipt_details)
+    insert_receipt_details(pool, user_id, user_name, receipt_details)
     
     # # # query database
-    result = pool.execute(sqlalchemy.text("SELECT * from receipt_details")).fetchall()
+    result = pool.execute(sqlalchemy.text("SELECT * from receipt_details_2")).fetchall()
 
     # # # Do something with the results
     for row in result:
         print(row)
 
     
-    return render_template("ocr_success.html") 
+    return redirect(url_for('dashboard')) 
     # Redirecting to dashboard
 
 

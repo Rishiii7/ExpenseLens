@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div  class="main_dashboard">
+    <!-- Row 1 -->
+    <div class = "grid-card">
+    <div class="row row1">
+        <!-- Card 1 -->
+        <div class="column">
+            <div class="card">
+                <div class="percentage-change">Percentage Change</div>
+                <div class="percentage-value">{{ percentage_change }}</div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="column">
+            <div class="card">
+                <div class="total_expenditure">Total Expenditure</div>
+                <div class="total_expenditure-value">{{ total_expenditure }}</div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="column">
+            <div class="card">
+                <div class="top-category">Top Category</div>
+                <div class="top-category-value">{{ highest_spending_category }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="row row2">
+        <!-- Card 4 -->
+        <div class="column">
+            <div class="card card-4-5">
+                <h2 style="color: white;">Category wise expenditure</h2>
+                <div class="chart-placeholder">
+                    <!-- Display Category-wise Expenditure in a Pie Chart -->
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="column">
+            <div class="card card-4-5">
+                <h2 style="color: white;">Transactions</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Merchant Name</th>
+                                <th>Location</th>
+                                <th>Date</th>
+                                <th>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in transaction_details %}
+                            <tr>
+                                <td>{{ item['category'] }}</td>
+                                <td>{{ item['merchant_name'] }}</td>
+                                <td>{{ item['location'] }}</td>
+                                <td>{{ item['date'] }}</td>
+                                <td>{{ item['total_amount'] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="row row3">
+        <!-- Card 6 -->
+        <div class="column">
+            <div class="card card-6">
+                <h2 style="color: white;">Expenditure trends</h2>
+                <div class="chart-placeholder">
+                    <!-- Display Monthly Expenditure Trends in a Bar Chart -->
+                    <canvas id="myChart" ></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+            console.log("Category Expenditure Data:", {{ cat_expenditure|tojson|safe }});
+    
+            // JavaScript code to create a small pie chart
+            var ctxPie = document.getElementById('pieChart').getContext('2d');
+            var dataPie = {
+                labels: Object.keys({{ cat_expenditure|tojson|safe }}),
+                datasets: [{
+                    data: Object.values({{ cat_expenditure|tojson|safe }}),
+                    backgroundColor: [
+                    'rgba(13, 51, 83, 0.7)',
+                    'rgba(24, 77, 116, 0.7)',
+                    'rgba(35, 102, 149, 0.7)',
+                    'rgba(46, 128, 182, 0.7)',
+                    'rgba(57, 153, 215, 0.7)',
+                    ],
+                }],
+            };
+            var optionsPie = {
+                responsive: true,
+                maintainAspectRatio: false,
+            };
+            var myPieChart = new Chart(ctxPie, {
+                type: 'pie',
+                data: dataPie,
+                options: optionsPie,
+            });
+
+            console.log("Monthly Expenditure x labels:", {{ x_labels_monthly_expenditure|tojson|safe }});
+            console.log("Monthly Expenditure y labels:", {{  y_values_monthly_expenditure}});
+    
+    
+            const xValues = {{ x_labels_monthly_expenditure|tojson|safe }};
+            const yValues = {{ y_values_monthly_expenditure}};
+
+
+            new Chart("myChart", {
+                type: "line",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                    fill: false,
+                    lineTension: 0,
+                    backgroundColor: "rgba(57, 153, 215, 0.7)",
+                    borderColor: "rgba(57, 153, 215, 0.7)",
+                    data: yValues
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { 
+                            display: true,
+                            labels: {
+                                color: 'white',
+                            },
+                        },
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Month',
+                                color: 'white',
+                            },
+                            ticks: {
+                                color: 'white',
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)',
+                            },
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Amount($)',
+                                color: 'white',
+                            },
+                            ticks: {
+                                color: 'white',
+                                min: 6,
+                                max: 16,
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)',
+                            },
+                        },
+                    },
+                    maintainAspectRatio: false,
+                    aspectRatio: 2,
+                }
+            });
+        });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Include Bootstrap JS and Popper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+{% endblock %}

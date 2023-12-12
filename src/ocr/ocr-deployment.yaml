@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ocr-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ocr-microservice
+  template:
+    metadata:
+      labels:
+        app: ocr-microservice
+    spec:
+      containers:
+      - name: ocr-microservice
+        image: mprach/ocr-microservice:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5001
+          protocol: TCP

@@ -4,13 +4,16 @@ import json
 import requests
 import sys
 
-from src.ocr.ocr_utils import read_file_object, write_file_object
+from ocr_utils import read_file_object, write_file_object
 
 class AspriseOCR:
     def __init__(self, api_key='TEST'):
         self.api_key = api_key
 
-    def perform_ocr(self, image_path, recognizer='US', ref_no='oct_python_123'):
+    def perform_ocr_from_bytes(self, 
+                               image_bytes, 
+                               recognizer='auto', 
+                               ref_no='oct_python_123'):
         """
         Performs Optical Character Recognition (OCR) on an image.
 
@@ -22,9 +25,14 @@ class AspriseOCR:
 
         receiptOcrEndpoint = 'https://ocr.asprise.com/api/v1/receipt'
 
-        imageBytes = read_file_object(image_path, "rb")
+        imageBytes = image_bytes
         # with open(image_path, 'rb') as imageFile:
         #     imageBytes = imageFile.read()
+
+        # The image data is sent to the OCR server in binary format, 
+        # preventing it from being interpreted as a UTF-8 encoded string. 
+        # The content type ('image/jpeg') indicates to the server the 
+        # format of the file being sent.
 
         response = requests.post(url=receiptOcrEndpoint,
                                  data= {
@@ -33,8 +41,11 @@ class AspriseOCR:
                                      'ref_no' : ref_no
                                  },
                                  files= {
-                                     'file' : imageBytes
-                                 })
+                                     'file': ('image.jpeg', 
+                                      imageBytes, 
+                                      'image/jpeg')
+                                      }
+                                )
 
         if response.status_code == 200:
             return json.loads(response.text)

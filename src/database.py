@@ -41,12 +41,33 @@ def insert_user_image(pool, user_name, gcs_blob_name):
         db_conn.execute(insert_stmt, {"username": user_name, "image_path": gcs_blob_name})
         db_transaction.commit()
         
+def create_authentication_table(pool):
+    with pool.connect() as db_conn:
+        db_transaction = db_conn.begin()
+        db_conn.execute("""
+            CREATE TABLE IF NOT EXISTS authentication (
+                username VARCHAR(255) PRIMARY KEY,
+                password VARCHAR(255)
+            )
+        """)
+        db_transaction.commit()
+
+def insert_authentication_details(pool, user_name, password):
+    insert_stmt = sqlalchemy.text(
+        "INSERT INTO authentication (username, password) VALUES (:username, :password)"
+    )
+    with pool.connect() as db_conn:
+        db_transaction = db_conn.begin()
+        db_conn.execute(insert_stmt, {"username": user_name, "password": password})
+        db_transaction.commit()
+        
 def create_receipt_details_table(pool):
     with pool.connect() as db_conn:
         db_transaction = db_conn.begin()
         db_conn.execute("""
-            CREATE TABLE IF NOT EXISTS receipt_details (
+            CREATE TABLE IF NOT EXISTS receipt_details_2 (
                 id SERIAL PRIMARY KEY,
+                username VARCHAR(255),
                 receipt_id INTEGER REFERENCES user_images(id),
                 category VARCHAR(50),
                 merchant_name VARCHAR(255),
@@ -62,14 +83,14 @@ def create_receipt_details_table(pool):
         """)
         db_transaction.commit()
 
-def insert_receipt_details(pool, user_id, receipt_details):
+def insert_receipt_details(pool, user_id, username, receipt_details):
     
     insert_stmt = sqlalchemy.text(
-        "INSERT INTO receipt_details (receipt_id, category, merchant_name, city, state, country, date, product_details, total_amount, sub_total_amount, tax) VALUES (:receipt_id, :category, :merchant_name, :city, :state, :country, :date, :product_details, :total_amount, :sub_total_amount, :tax)"
+        "INSERT INTO receipt_details_2 (username, receipt_id, category, merchant_name, city, state, country, date, product_details, total_amount, sub_total_amount, tax) VALUES (:username, :receipt_id, :category, :merchant_name, :city, :state, :country, :date, :product_details, :total_amount, :sub_total_amount, :tax)"
     )
     with pool.connect() as db_conn:
         db_transaction = db_conn.begin()
-        db_conn.execute(insert_stmt, {"receipt_id": int(user_id), "category": receipt_details["category"], "merchant_name": receipt_details["merchant_name"], "city": receipt_details["city"], "state": receipt_details["state"], "country": receipt_details["country"], "date": receipt_details["date"], "product_details": receipt_details["product_details"], "total_amount": float(receipt_details["total_amount"]), "sub_total_amount": float(receipt_details["sub_total_amount"]), "tax": float(receipt_details["tax"])})
+        db_conn.execute(insert_stmt, {"username": username, "receipt_id": int(user_id), "category": receipt_details["category"], "merchant_name": receipt_details["merchant_name"], "city": receipt_details["city"], "state": receipt_details["state"], "country": receipt_details["country"], "date": receipt_details["date"], "product_details": receipt_details["product_details"], "total_amount": float(receipt_details["total_amount"]), "sub_total_amount": float(receipt_details["sub_total_amount"]), "tax": float(receipt_details["tax"])})
         db_transaction.commit()
         
 def closeConnection():

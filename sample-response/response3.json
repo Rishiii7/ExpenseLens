@@ -1,349 +1,291 @@
 {
-    "ocr_type": "receipts",
-    "request_id": "P_24.9.117.66_lpli42b9_n3c",
-    "ref_no": "oct_python_123",
-    "file_name": "file",
-    "request_received_on": 1701367216821,
-    "success": true,
-    "image_width": 630,
-    "image_height": 1600,
-    "image_rotation": -0.038,
-    "recognition_completed_on": 1701367217882,
-    "receipts": [
-        {
-            "merchant_name": "Carlie C'",
-            "merchant_address": "1650 30th St.",
-            "merchant_phone": "+1 303-443-9622",
-            "merchant_website": null,
-            "merchant_tax_reg_no": null,
-            "merchant_company_reg_no": null,
-            "region": null,
-            "mall": null,
-            "country": "US",
-            "receipt_no": null,
-            "date": "2023-10-29",
-            "time": "06:53",
-            "items": [
-                {
-                    "amount": 4.99,
-                    "category": null,
-                    "description": "NTVL GRANOLA BAR < +",
-                    "flags": " B",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 5.59,
-                    "category": null,
-                    "description": "KELL CORN FLAKES",
-                    "flags": " B",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 8.01,
-                    "category": null,
-                    "description": "BKRY DONUTS",
-                    "flags": " B",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 3.99,
-                    "category": null,
-                    "description": "POTATOES RUSS",
-                    "flags": " B",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 3.99,
-                    "category": null,
-                    "description": "CHEESECAKE BAR",
-                    "flags": " B",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 2.29,
-                    "category": null,
-                    "description": "KRO 100 RT BRE",
-                    "flags": " B",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 7.33,
-                    "category": null,
-                    "description": "WTONIONS RED",
-                    "flags": " B",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 6.25,
-                    "category": null,
-                    "description": "HTTOMATO ORGNC",
-                    "flags": " B",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 0.89,
-                    "category": null,
-                    "description": "AVOCADOS",
-                    "flags": " B",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 12.99,
-                    "category": null,
-                    "description": "CTPHL SKIN CLEANSR",
-                    "flags": " T",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 2.0,
-                    "category": null,
-                    "description": "SCSOOPER SAVINGS",
-                    "flags": "",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 2.69,
-                    "category": null,
-                    "description": "KRO DRESSING",
-                    "flags": " B",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": -3.99,
-                    "category": null,
-                    "description": "KRO BUTTER",
-                    "flags": " B",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 0.3,
-                    "category": null,
-                    "description": "SCSOOPER SAVINGS",
-                    "flags": "",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 7.99,
-                    "category": null,
-                    "description": "MOUNTAIN HGH YOGRT",
-                    "flags": " B",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 0.2,
-                    "category": null,
-                    "description": "MRPAPER BE FEE",
-                    "flags": "",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 4.59,
-                    "category": null,
-                    "description": "TAX",
-                    "flags": "",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                },
-                {
-                    "amount": 88.77,
-                    "category": null,
-                    "description": "BALANCE",
-                    "flags": "",
-                    "qty": null,
-                    "remarks": null,
-                    "tags": null,
-                    "unitPrice": null
-                }
-            ],
-            "currency": "USD",
-            "total": 88.77,
-            "subtotal": null,
-            "tax": 4.59,
-            "service_charge": null,
-            "tip": null,
-            "payment_method": null,
-            "payment_details": null,
-            "credit_card_type": "DISCOVER",
-            "credit_card_number": "3181",
-            "ocr_text": "            KING\n            Soopera\n        Hometown Gnocer Hometown\n      1650 30th St.\n      (303) 443-9622 Store\n      Your cashier was CHEC 520\n  Valued Customer            ******* 2369\n         NTVL GRANOLA BAR < +     4.99 B\n         SOOPER SAVINGS     0.30\n SC\n         KELL CORN FLAKES         5.59 B\n  9 @ 0.89\n         BKRY DONUTS              8.01 B\n         POTATOES RUSS            3.99 B\n                                 12.99 X\n FX      NEUTR SUNCARE\n         CHEESECAKE BAR           3.99 B\n         KRO 100 RT BRE           2.29 B\n  5.68 1.29 /\n WT      ONIONS RED               7.33 B\n  2.09 @ 2.99 lb\n HT      TOMATO ORGNC             6.25 B\n         AVOCADOS                 0.89 B\n         CTPHL SKIN CLEANSR-     12.99 T\n SC      SOOPER SAVINGS    2.00\n         KRO DRESSING             2.69 B\n         KRO BUTTER        -$     3.99 B\n SC      SOOPER SAVINGS    0.30\n         MOUNTAIN HGH YOGRT       7.99 B\n 2 @ 0.10\n MR     PAPER BE FEE             0.20\n *****                            ******\n                Coupons\n SC     Fuel Points\n SC     Gaming Points\n        TAX                      4.59\n   **** BALANCE                 88.77\n Boulder CO 80302\n DISCOVER Purchase\n ************ 3181 - H\n REF#: 02992R TOTAL: 88.77\n AID: A00000015230100100000001\n TC: 60AD88CF1BC7F6DF\n         DISCOVER               88.77\n         CHANGE                  0.00\n  3.860% Tax                     3.24\n  5.185% Tax 8                   1.35\n  TOTAL TAX                      4.59\n TOTAL NUMBER OF ITEMS SOLD =    22\n Sooper Card Coupon Savings    $2.60\n Total Coupon Savings          $2.50\n You Saved 2% Off Your Order Today!\n 10/29/23 06:53 pm 61 520 95 999999520\n *****\n   Annual Card Savings $6.30\n Fuel Points Earned Today: 84\n Total Oct Fuel Points: 84\n ********************\n     GAMING POINTS REWARDS PLUS\n    Every $40 Spent on participating\n    Visit items earns Rewards Points\n          www.cointsrewardsplus.com\n         to redeem for rewards",
-            "ocr_confidence": 93.35,
-            "width": 452,
-            "height": 1544,
-            "avg_char_width": 11.284,
-            "avg_line_height": 19.873,
-            "conf_amount": 83,
-            "source_locations": {
-                "date": [
-                    [
-                        {
-                            "y": 1321,
-                            "x": 85
-                        },
-                        {
-                            "y": 1315,
-                            "x": 256
-                        },
-                        {
-                            "y": 1345,
-                            "x": 257
-                        },
-                        {
-                            "y": 1352,
-                            "x": 86
-                        }
-                    ]
+    "ocr_text": {
+        "file_name": "image.jpg",
+        "image_height": 1024,
+        "image_rotation": 0.019,
+        "image_width": 768,
+        "ocr_type": "receipts",
+        "receipts": [
+            {
+                "avg_char_width": 6.7099,
+                "avg_line_height": 10.4003,
+                "conf_amount": 74,
+                "country": "US",
+                "credit_card_number": null,
+                "credit_card_type": "visa",
+                "currency": "USD",
+                "date": "2023-11-24",
+                "height": 1004,
+                "items": [
+                    {
+                        "amount": 14.99,
+                        "category": null,
+                        "description": "Tops Fancy Jersey",
+                        "flags": "",
+                        "qty": null,
+                        "remarks": null,
+                        "tags": null,
+                        "unitPrice": null
+                    },
+                    {
+                        "amount": 6.99,
+                        "category": null,
+                        "description": "Discount( -8.00)",
+                        "flags": "",
+                        "qty": null,
+                        "remarks": null,
+                        "tags": null,
+                        "unitPrice": null
+                    },
+                    {
+                        "amount": 20.99,
+                        "category": null,
+                        "description": "Tops Knitwear",
+                        "flags": "",
+                        "qty": null,
+                        "remarks": null,
+                        "tags": null,
+                        "unitPrice": null
+                    },
+                    {
+                        "amount": 9.99,
+                        "category": null,
+                        "description": "Discount( -11,00)",
+                        "flags": "",
+                        "qty": null,
+                        "remarks": null,
+                        "tags": null,
+                        "unitPrice": null
+                    },
+                    {
+                        "amount": 14.99,
+                        "category": null,
+                        "description": "Tops Knitwear",
+                        "flags": "",
+                        "qty": null,
+                        "remarks": null,
+                        "tags": null,
+                        "unitPrice": null
+                    },
+                    {
+                        "amount": 9.99,
+                        "category": null,
+                        "description": "Discount-5.00)",
+                        "flags": "",
+                        "qty": null,
+                        "remarks": null,
+                        "tags": null,
+                        "unitPrice": null
+                    },
+                    {
+                        "amount": 34.99,
+                        "category": null,
+                        "description": "Knitwear",
+                        "flags": "",
+                        "qty": null,
+                        "remarks": null,
+                        "tags": null,
+                        "unitPrice": null
+                    },
+                    {
+                        "amount": 13.99,
+                        "category": null,
+                        "description": "Discount( -21.00)",
+                        "flags": "",
+                        "qty": null,
+                        "remarks": null,
+                        "tags": null,
+                        "unitPrice": null
+                    },
+                    {
+                        "amount": 76.99,
+                        "category": null,
+                        "description": "Outdoor/Blazers",
+                        "flags": "",
+                        "qty": null,
+                        "remarks": null,
+                        "tags": null,
+                        "unitPrice": null
+                    },
+                    {
+                        "amount": 27.99,
+                        "category": null,
+                        "description": "Discount( -49.00)",
+                        "flags": "",
+                        "qty": null,
+                        "remarks": null,
+                        "tags": null,
+                        "unitPrice": null
+                    }
                 ],
-                "total": [
-                    [
-                        {
-                            "y": 1037,
-                            "x": 65
-                        },
-                        {
-                            "y": 1028,
-                            "x": 379
-                        },
-                        {
-                            "y": 1048,
-                            "x": 379
-                        },
-                        {
-                            "y": 1058,
-                            "x": 66
-                        }
+                "mall": null,
+                "merchant_address": null,
+                "merchant_company_reg_no": null,
+                "merchant_name": "H & M",
+                "merchant_phone": null,
+                "merchant_tax_reg_no": null,
+                "merchant_website": null,
+                "ocr_confidence": 96.36,
+                "ocr_text": "                   H & M\n                www.hm.com\n                Flat Irons\n          1 W. Flatiron Crossing\n           Broomfield, 80021\n              1-855 HNM SHOP\n  SA      739829 Store: 120233 No.: 6587\n Date: 11/24/2023 Till: 4 Time: 12:00\n Member ID:              1258567008\n Tops Fancy Jersey                 14.99\n 1198824     XS     Black\n Discount           ( -8.00)        6.99\n Tops Knitwear                     20.99\n 1186575 XXS        Orange\n Discount           ( -11,00)       9,99\n Tops Knitwear                     14.99\n  1161768 XXS       Khaki\n Discount               -5.00)     9.99\n  Knitwear                        34.99\n  1089152    XS     Beige\n  Discount          ( -21.00)     13.99\n  Outdoor/Blazers                 76.99\n  1161628    XS     Belge\n  Discount          ( -49.00)     27.99\n  Receipt Subtotal               $68.95\n  Manual %           30.00 %     -20.69\n  Net total                       48.26\n                         Tax:      3.94\n Total\n                                 $52.20\n              no\n  Number of items:                    5\n  Total Discount $114.69\n  Visa                           $52.20\n  Tran.#: 21922\n MID: 178050754997\n TID: 4477596\n Trace #: 289757\n Purchase\n Visa\n APPROVED     Contactless\n         Amount USD$52.20\n  No signature required\n RRN: 000001289348 P\n Auth.#: 06993D\n Mode: Issuer\n HMUS0233504/HMUS0233C04\n 00 (001)\n 11/24/2023 12:02:32 PM\n AID: A0000000031010\n App Name: VISA CREDIT\n TVR: 0000000000\n IAD:\n  1F420132A0000000001003\n  0273000000004000000000\n  00000000000000000000\n TSI: 0000     ARC: 00\n      Customer Copy",
+                "payment_details": null,
+                "payment_method": "credit_card",
+                "receipt_no": "1F420132A0000000001003",
+                "region": null,
+                "service_charge": null,
+                "source_locations": {
+                    "date": [
+                        [
+                            {
+                                "x": 260,
+                                "y": 99
+                            },
+                            {
+                                "x": 334,
+                                "y": 100
+                            },
+                            {
+                                "x": 334,
+                                "y": 112
+                            },
+                            {
+                                "x": 260,
+                                "y": 111
+                            }
+                        ]
+                    ],
+                    "doc": [
+                        [
+                            {
+                                "x": 216,
+                                "y": -52
+                            },
+                            {
+                                "x": 531,
+                                "y": -46
+                            },
+                            {
+                                "x": 509,
+                                "y": 1058
+                            },
+                            {
+                                "x": 194,
+                                "y": 1052
+                            }
+                        ]
+                    ],
+                    "merchant_name": [
+                        [
+                            {
+                                "x": 356,
+                                "y": 1
+                            },
+                            {
+                                "x": 376,
+                                "y": 0
+                            },
+                            {
+                                "x": 376,
+                                "y": 9
+                            },
+                            {
+                                "x": 356,
+                                "y": 10
+                            }
+                        ]
+                    ],
+                    "receipt_no": [
+                        [
+                            {
+                                "x": 216,
+                                "y": 926
+                            },
+                            {
+                                "x": 375,
+                                "y": 926
+                            },
+                            {
+                                "x": 375,
+                                "y": 937
+                            },
+                            {
+                                "x": 216,
+                                "y": 937
+                            }
+                        ]
+                    ],
+                    "subtotal": [
+                        [
+                            {
+                                "x": 438,
+                                "y": 433
+                            },
+                            {
+                                "x": 482,
+                                "y": 433
+                            },
+                            {
+                                "x": 481,
+                                "y": 444
+                            },
+                            {
+                                "x": 437,
+                                "y": 444
+                            }
+                        ]
+                    ],
+                    "tax": [
+                        [
+                            {
+                                "x": 451,
+                                "y": 484
+                            },
+                            {
+                                "x": 481,
+                                "y": 486
+                            },
+                            {
+                                "x": 480,
+                                "y": 498
+                            },
+                            {
+                                "x": 450,
+                                "y": 496
+                            }
+                        ]
+                    ],
+                    "total": [
+                        [
+                            {
+                                "x": 436,
+                                "y": 524
+                            },
+                            {
+                                "x": 480,
+                                "y": 524
+                            },
+                            {
+                                "x": 479,
+                                "y": 535
+                            },
+                            {
+                                "x": 435,
+                                "y": 534
+                            }
+                        ]
                     ]
-                ],
-                "credit_card_number": [
-                    [
-                        {
-                            "y": 994,
-                            "x": 67
-                        },
-                        {
-                            "y": 987,
-                            "x": 282
-                        },
-                        {
-                            "y": 1009,
-                            "x": 283
-                        },
-                        {
-                            "y": 1016,
-                            "x": 68
-                        }
-                    ]
-                ],
-                "doc": [
-                    [
-                        {
-                            "y": 4,
-                            "x": 14
-                        },
-                        {
-                            "y": -14,
-                            "x": 512
-                        },
-                        {
-                            "y": 1683,
-                            "x": 577
-                        },
-                        {
-                            "y": 1702,
-                            "x": 79
-                        }
-                    ]
-                ],
-                "tax": [
-                    [
-                        {
-                            "y": 1192,
-                            "x": 98
-                        },
-                        {
-                            "y": 1189,
-                            "x": 206
-                        },
-                        {
-                            "y": 1209,
-                            "x": 207
-                        },
-                        {
-                            "y": 1213,
-                            "x": 98
-                        }
-                    ]
-                ],
-                "merchant_address": [
-                    [
-                        {
-                            "y": 213,
-                            "x": 106
-                        },
-                        {
-                            "y": 206,
-                            "x": 263
-                        },
-                        {
-                            "y": 229,
-                            "x": 264
-                        },
-                        {
-                            "y": 236,
-                            "x": 108
-                        }
-                    ]
-                ]
+                },
+                "subtotal": 68.95,
+                "tax": 3.94,
+                "time": null,
+                "tip": null,
+                "total": 52.2,
+                "width": 286
             }
-        }
-    ]
+        ],
+        "recognition_completed_on": 1701549599317,
+        "ref_no": "oct_python_123",
+        "request_id": "P_67.190.127.88_lpoip55x_3tz",
+        "request_received_on": 1701549598822,
+        "success": true
+    }
 }
